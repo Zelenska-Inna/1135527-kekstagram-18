@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Inna Zelenska](https://up.htmlacademy.ru/javascript/18/user/1135527).
-* Наставник: `Неизвестно`.
+* Наставник:[Сергей Рубец](https://htmlacademy.ru/profile/amator).
 
 ---
 
