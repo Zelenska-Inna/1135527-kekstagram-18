@@ -48,58 +48,32 @@ function getRandomNumber(min, max) {
   return Math.floor(min + Math.random() * (max + 1 - min));
 }
 
-
 var photos = getPhotos(MAX_PHOTOS_COUNT);
 
+var callToTemplate = document.querySelector('#picture').content;//вызвали темплейт
+var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
+var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
+
 function render(data) {
-	console.log(data)
+
+	var container = document.createDocumentFragment(); //прячет оболочку
+
+	for (var i = 0; i < data.length; i++) {
+		var actualPhoto = data[i];
+
+		var element = contentsTemplate.cloneNode(true); //клонирование тег а и дети
+		var img = element.querySelector('img');
+
+		element.href = actualPhoto.url; // где url это ключ обьекта 
+		img.src = actualPhoto.url;//тоже самое??? img.setAttribute('src', actualPhoto.url);
+		img.alt = actualPhoto.description; 
+		element.querySelector('.picture__comments').textContent = actualPhoto.comments.length;//длина массива(рандомная)
+		element.querySelector('.picture__likes').textContent = actualPhoto.likes;
+		container.appendChild(element);// добавляет клонированый а и детей в ОП 
+
+	}
+	elementRender.appendChild(container); // добавление в DOM
 }
+render(photos) // в функию перейдут данные с getPhotos в место data
 
-
-render(photos)
-
-
-//вариант 1
-
-var makeElement = function (tagName, className) {
-  var element = document.createElement(tagName);
-  element.classList.add(className);
-  return element;
-};
-
-var createCard = function (card) { //сюда надо вставить данные с getPhoto?
-  var listItem = makeElement('a', 'picture');
-
-  var picture = makeElement('img', 'src');
-  picture.src = product.url;
-  listItem.appendChild(picture);
-
-  var comment = makeElement('span', 'picture__comments');
-  picture.appendChild(comment);
-
-  var comment = makeElement('span', 'picture__likes');
-  picture.appendChild(like);
-
-  return listItem;
-};
-
-
-for (var i = 0; i < getPhoto().length; i++) { // getPhoto().length не правильно но а как туда впихнуть обьект??
-  var cardItem = createCard(getPhoto[i]);
-  document.appendChild(cardItem);  //наверное вставила не туда
-}
-
-
-//задача 3  
-
-var template = document.querySelector('#picture').content.querySelector('a');
-var fragment = document.createDocumentFragment();
-
-//это наверное лишнее
-// for (var i = 0; i < 25; i++) {
-//   var element = template.cloneNode(true);
-//   element.children[0].textContent = i;
-//   fragment.appendChild(element);  
-// }
- document.appendChild(fragment);//наверное вставила не туда
 
