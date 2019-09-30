@@ -6,7 +6,7 @@ var comments = [
 	'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.',
 	'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.',
 	'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
-]
+];
 var names = ['Dima', 'Max', 'Masha'];
 
 function getRandomComments(index) {
@@ -28,7 +28,7 @@ function getRandomComments(index) {
 function getPhotos(length) {
 	var photos = [];
 	for (var i = 0; i < length; i++) {
-		var photo = getPhoto(i)
+		var photo = getPhoto(i);
 		photos.push(photo);
 	}
 
@@ -41,11 +41,11 @@ function getPhoto(index) {
 		description: 'fasdfs',
 		likes: getRandomNumber(15, 200),
 		comments: getRandomComments(index),
-	}
+	}; 
 }
 
 function getRandomNumber(min, max) {
-  return Math.floor(min + Math.random() * (max + 1 - min));
+	return Math.floor(min + Math.random() * (max + 1 - min));
 }
 
 var photos = getPhotos(MAX_PHOTOS_COUNT);
@@ -74,6 +74,6 @@ function render(data) {
 	}
 	elementRender.appendChild(container); // добавление в DOM
 }
-render(photos) // в функию перейдут данные с getPhotos в место data
+render(photos); // в функию перейдут данные с getPhotos в место data
 
 
