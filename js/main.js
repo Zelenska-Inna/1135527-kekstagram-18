@@ -1,4 +1,12 @@
 var MAX_PHOTOS_COUNT = 25;
+var COUNTS = {
+	MIN: 1,
+	MAX: 2,
+};
+var COUNTS_LIKES = {
+	MIN: 15,
+	MAX: 200,
+};
 var comments = [
 	'Всё отлично!',
 	'В целом всё неплохо. Но не всё.',
@@ -10,7 +18,7 @@ var comments = [
 var names = ['Dima', 'Max', 'Masha'];
 
 function getRandomComments() {
-	var count = getRandomNumber(1, 2);//массив равно или 1 обект или 2 обекта
+	var count = getRandomNumber(COUNTS.MIN, COUNTS.MAX);//массив равно или 1 обект или 2 обекта
 	var randomComments = [];
 
 	for (var i = 0; i < count; i++) {
@@ -19,7 +27,7 @@ function getRandomComments() {
 		randomComments.push({
 			message: comments[randomIndex],
 			names: names[getRandomNumber(0, names.length - 1)],
-			avatar: 'img/avatar-' + randomIndexAvatar + '.svg', // генерит рандом автара////изменитьна randomIndex
+			avatar: 'img/avatar-' + randomIndexAvatar + '.svg', // генерит рандом автара
 		});
 	}
 
@@ -42,23 +50,21 @@ function getPhoto(index) {
 	return {
 		url: 'photos/' + (index + 1) + '.jpg',
 		description: 'fasdfs',
-		likes: getRandomNumber(15, 200),
-		comments: getRandomComments(index),//
+		likes: getRandomNumber(COUNTS_LIKES.MIN, COUNTS_LIKES.MAX),
+		comments: getRandomComments(index),
 	}; 
 }
-
 
 function getRandomNumber(min, max) {
 	return Math.floor(min + Math.random() * (max + 1 - min));
 }
-
 
 var callToTemplate = document.querySelector('#picture').content;//вызвали тег темплейт
 var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
 var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
 
 
-function render(data) {
+function renderPhotos(data) {
 
 	var container = document.createDocumentFragment(); //прячет оболочку
 
@@ -69,7 +75,7 @@ function render(data) {
 		var img = element.querySelector('img');
 
 		element.href = actualPhoto.url; // где url это ключ обьекта 
-		img.src = actualPhoto.url;//тоже самое??? img.setAttribute('src', actualPhoto.url);
+		img.src = actualPhoto.url;
 		img.alt = actualPhoto.description; 
 		element.querySelector('.picture__comments').textContent = actualPhoto.comments.length;//длина массива(рандомная)
 		element.querySelector('.picture__likes').textContent = actualPhoto.likes;
@@ -79,55 +85,53 @@ function render(data) {
 	elementRender.appendChild(container); // добавление в DOM
 }
 
-render(photos); //ренедер - отрисует в DOM 
+renderPhotos(photos); 
+//последние
+var dataСomments = getRandomComments();//присваение переменной результат функции
 
-var actualPhoto = photos[getRandomNumber(0,photos.length-1)];//выдает по 1 рандомному фото
+function renderBigPicture() {
+	var actualPhoto = photos[getRandomNumber(0,photos.length-1)];//выдает по 1 рандомному фото
+	var bigPicture = document.querySelector('.big-picture');//вывод тега section
+	bigPicture.classList.remove('hidden');//удаление
 
-var bigPicture = document.querySelector('.big-picture');//вывод тега section
-bigPicture.classList.remove('hidden');//удаление
+	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
+	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
+	bigImg.src = actualPhoto.url;
 
-var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
-var bigImg = bigPictureImg.querySelector('img');//вывод тега img
-bigImg.src = actualPhoto.url;//
+	var bigPictureLikes = bigPicture.querySelector('.likes-count');//вывод тега span
+	bigPictureLikes.textContent = actualPhoto.likes;//вывод рандомных лайков
 
-var bigPictureLikes = bigPicture.querySelector('.likes-count');//вывод тега span
-bigPictureLikes.textContent = actualPhoto.likes;//вывод рандомных лайков
-//?
-var replacement = getRandomComments();//
+	var bigPictureComments = bigPicture.querySelector('.comments-count');//вывод тега
+	bigPictureComments.innerHTML = dataСomments.length;
 
-var bigPictureComments = bigPicture.querySelector('.comments-count');//вывод тега
-bigPictureComments.innerHTML = replacement.length;
+	var caption = bigPicture.querySelector('.social__caption');//вывод тега р
+	caption.innerHTML = actualPhoto.description;//добавлено описание
+}
 
-
-var caption = bigPicture.querySelector('.social__caption');// p
-caption.innerHTML = actualPhoto.description;//добавлено описание
+renderBigPicture(dataСomments);
 
 // Список комментариев под фотографией
-
-var commentsList = bigPicture.querySelector('.social__comments');//место списка ul
-console.log(commentsList);
-
 var callToMyTemplate = document.querySelector('#my__comment').content;//обращение к темплейту
 var subjectTemplate = callToMyTemplate.querySelector('.social__comment');// вызвали его содержание/тег  li
 var elementMyRender = document.querySelector('.social__comments');//место куда отрисует склонированые дети темплейта
 
-function renderTwo(data){
+function renderComments(data){
 	var container = document.createDocumentFragment();
 	for (var i = 0; i < data.length; i++) {
-		var oneComment = data[i];//елемент массива который выводит обект 
+		var comment = data[i];//елемент массива который выводит обект 
 		var element = subjectTemplate.cloneNode(true); //клонирование тег li и дети 
 		var commentImg = element.querySelector('img');
-		commentImg.src = oneComment.avatar;
-		commentImg.alt = oneComment.names; 
-		element.querySelector('.social__text').textContent = oneComment.message;//длина массива(рандомная)
+		commentImg.src = comment.avatar;
+		commentImg.alt = comment.names; 
+		element.querySelector('.social__text').textContent = comment.message;//длина массива(рандомная)
 		container.appendChild(element);// добавляет клонированый li  и детей в ОП 
 	}
 	elementMyRender.appendChild(container);//должен вставить в ul
-
 }
-renderTwo(replacement);
 
-var enumerator = document.querySelector('.social__comment-count');//вывод тега 
+renderComments(dataСomments);
+
+var enumerator = document.querySelector('.social__comment-count');//вывод тега div
 enumerator.classList.add('visually-hidden');
-var batch = document.querySelector('.comments-loader');//вывод тега 
+var batch = document.querySelector('.comments-loader');//вывод тега button
 batch.classList.add('visually-hidden');
