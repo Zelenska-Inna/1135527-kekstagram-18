@@ -17,6 +17,10 @@ var comments = [
 ];
 var names = ['Dima', 'Max', 'Masha'];
 
+function getRandomNumber(min, max) {
+	return Math.floor(min + Math.random() * (max + 1 - min));
+}
+
 function getRandomComments() {
 	var count = getRandomNumber(COUNT.MIN, COUNT.MAX);//массив равно или 1 обект или 2 обекта
 	var randomComments = [];
@@ -34,6 +38,17 @@ function getRandomComments() {
 	return randomComments;
 }
 
+function getPhoto(index) {
+	return {
+		url: 'photos/' + (index + 1) + '.jpg',
+		description: 'fasdfs',
+		likes: getRandomNumber(COUNT_LIKES.MIN, COUNT_LIKES.MAX),
+		comments: getRandomComments(index),
+	}; 
+}
+
+var photos = getPhotos(MAX_PHOTOS_COUNT);
+
 function getPhotos(length) {
 	var photos = [];
 	for (var i = 0; i < length; i++) {
@@ -44,20 +59,6 @@ function getPhotos(length) {
 	return photos;
 }
 
-var photos = getPhotos(MAX_PHOTOS_COUNT);
-
-function getPhoto(index) {
-	return {
-		url: 'photos/' + (index + 1) + '.jpg',
-		description: 'fasdfs',
-		likes: getRandomNumber(COUNT_LIKES.MIN, COUNT_LIKES.MAX),
-		comments: getRandomComments(index),
-	}; 
-}
-
-function getRandomNumber(min, max) {
-	return Math.floor(min + Math.random() * (max + 1 - min));
-}
 
 var callToTemplate = document.querySelector('#picture').content;//вызвали тег темплейт
 var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
@@ -88,35 +89,37 @@ function renderPhotos(data) {
 renderPhotos(photos); 
 
 var dataСomments = getRandomComments();//присваение переменной результат функции
-var actualPhoto = photos[getRandomNumber(0,photos.length-1)];//выдает по 1 рандомному фото
+var actualBigPhoto = photos[getRandomNumber(0,photos.length-1)];//выдает по 1 рандомному фото
 
-function renderBigPicture() {
+function renderBigPhoto(data) {
 
 	var bigPicture = document.querySelector('.big-picture');//вывод тега section
 	bigPicture.classList.remove('hidden');//удаление
 
 	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
 	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
-	bigImg.src = actualPhoto.url;
+	bigImg.src = data.url;
 
 	var bigPictureLikes = bigPicture.querySelector('.likes-count');//вывод тега span
-	bigPictureLikes.textContent = actualPhoto.likes;//вывод рандомных лайков
+	bigPictureLikes.textContent = data.likes;//вывод рандомных лайков
 
 	var bigPictureComments = bigPicture.querySelector('.comments-count');//вывод тега
 	bigPictureComments.innerHTML = dataСomments.length;
 
 	var caption = bigPicture.querySelector('.social__caption');//вывод тега р
-	caption.innerHTML = actualPhoto.description;//добавлено описание
+	caption.innerHTML = data.description;//добавлено описание
+
+
 }
 
-renderBigPicture(actualPhoto);
+renderBigPhoto(actualBigPhoto);//actualBigPhoto
 
 // Список комментариев под фотографией
 var callToMyTemplate = document.querySelector('#my__comment').content;//обращение к темплейту
 var subjectTemplate = callToMyTemplate.querySelector('.social__comment');// вызвали его содержание/тег  li
 var elementMyRender = document.querySelector('.social__comments');//место куда отрисует склонированые дети темплейта
 
-function renderComments(data){
+function renderComments(data){ //принимает или один или два обекта
 	var container = document.createDocumentFragment();
 	for (var i = 0; i < data.length; i++) {
 		var comment = data[i];//елемент массива который выводит обект 
@@ -132,7 +135,7 @@ function renderComments(data){
 
 renderComments(dataСomments);
 
-var enumerator = document.querySelector('.social__comment-count');//вывод тега div
-enumerator.classList.add('visually-hidden');
-var batch = document.querySelector('.comments-loader');//вывод тега button
-batch.classList.add('visually-hidden');
+// var enumerator = document.querySelector('.social__comment-count');//вывод тега div
+// enumerator.classList.add('visually-hidden');
+// var batch = document.querySelector('.comments-loader');//вывод тега button
+// batch.classList.add('visually-hidden');
