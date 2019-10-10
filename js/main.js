@@ -38,7 +38,6 @@ function getRandomComments() {
 	return randomComments;
 }
 
-
 function getPhoto(index) {
 	return {
 		url: 'photos/' + (index + 1) + '.jpg',
@@ -47,8 +46,6 @@ function getPhoto(index) {
 		comments: getRandomComments(index),
 	}; 
 }
-
-var photos = getPhotos(MAX_PHOTOS_COUNT);// данные и счоздание дааних функция дейтвие
 
 function getPhotos(length) {//создает и возвращает 
 	var photos = [];
@@ -60,9 +57,45 @@ function getPhotos(length) {//создает и возвращает
 	return photos;
 }
 
-var callToTemplate = document.querySelector('#picture').content;//вызвали тег темплейт
-var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
-var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
+
+function renderBigPhoto(data) {
+
+	var bigPicture = document.querySelector('.big-picture');//вывод тега section
+	bigPicture.classList.remove('hidden');//удаление
+
+	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
+	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
+	bigImg.src = data.url;
+
+	var bigPictureLikes = bigPicture.querySelector('.likes-count');//вывод тега span
+	bigPictureLikes.textContent = data.likes;//вывод рандомных лайков
+
+	var bigPictureComments = bigPicture.querySelector('.comments-count');//вывод тега
+	bigPictureComments.innerHTML = data.comments.length;
+
+	var caption = bigPicture.querySelector('.social__caption');//вывод тега р
+	caption.innerHTML = data.description;//добавлено описание
+	renderComments(data.comments);
+}
+
+function renderComments(data){ //принимает или один или два обекта
+	// Список комментариев под фотографией
+	var callToMyTemplate = document.querySelector('#my__comment').content;//обращение к темплейту
+	var subjectTemplate = callToMyTemplate.querySelector('.social__comment');// вызвали его содержание/тег  li
+	var elementMyRender = document.querySelector('.social__comments');//место куда отрисует склонированые дети темплейта
+
+	var container = document.createDocumentFragment();
+	for (var i = 0; i < data.length; i++) {
+		var comment = data[i];//елемент массива который выводит обект 
+		var element = subjectTemplate.cloneNode(true); //клонирование тег li и дети 
+		var commentImg = element.querySelector('img');
+		commentImg.src = comment.avatar;
+		commentImg.alt = comment.names; 
+		element.querySelector('.social__text').textContent = comment.message;//длина массива(рандомная)
+		container.appendChild(element);// добавляет клонированый li  и детей в ОП 
+	}
+	elementMyRender.appendChild(container);//должен вставить в ul
+}
 
 
 function renderPhotos(data) {
@@ -86,51 +119,16 @@ function renderPhotos(data) {
 	elementRender.appendChild(container); // добавление в DOM
 }
 
+var photos = getPhotos(MAX_PHOTOS_COUNT);// данные и счоздание дааних функция дейтвие
+
+var callToTemplate = document.querySelector('#picture').content;//вызвали тег темплейт
+var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
+var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
+
 renderPhotos(photos); 
-
 var actualBigPhoto = photos[getRandomNumber(0,photos.length-1)];//выдает по 1 рандомному фото
-
-function renderBigPhoto(data) {
-
-	var bigPicture = document.querySelector('.big-picture');//вывод тега section
-	bigPicture.classList.remove('hidden');//удаление
-
-	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
-	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
-	bigImg.src = data.url;
-
-	var bigPictureLikes = bigPicture.querySelector('.likes-count');//вывод тега span
-	bigPictureLikes.textContent = data.likes;//вывод рандомных лайков
-
-	var bigPictureComments = bigPicture.querySelector('.comments-count');//вывод тега
-	bigPictureComments.innerHTML = data.comments.length;
-
-	var caption = bigPicture.querySelector('.social__caption');//вывод тега р
-	caption.innerHTML = data.description;//добавлено описание
-	renderComments(data.comments);
-}
-
 renderBigPhoto(actualBigPhoto);
 
-
-function renderComments(data){ //принимает или один или два обекта
-	// Список комментариев под фотографией
-	var callToMyTemplate = document.querySelector('#my__comment').content;//обращение к темплейту
-	var subjectTemplate = callToMyTemplate.querySelector('.social__comment');// вызвали его содержание/тег  li
-	var elementMyRender = document.querySelector('.social__comments');//место куда отрисует склонированые дети темплейта
-
-	var container = document.createDocumentFragment();
-	for (var i = 0; i < data.length; i++) {
-		var comment = data[i];//елемент массива который выводит обект 
-		var element = subjectTemplate.cloneNode(true); //клонирование тег li и дети 
-		var commentImg = element.querySelector('img');
-		commentImg.src = comment.avatar;
-		commentImg.alt = comment.names; 
-		element.querySelector('.social__text').textContent = comment.message;//длина массива(рандомная)
-		container.appendChild(element);// добавляет клонированый li  и детей в ОП 
-	}
-	elementMyRender.appendChild(container);//должен вставить в ul
-}
 
 var enumerator = document.querySelector('.social__comment-count');//вывод тега div
 enumerator.classList.add('visually-hidden');
