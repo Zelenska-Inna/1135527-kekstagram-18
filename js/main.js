@@ -38,6 +38,7 @@ function getRandomComments() {
 	return randomComments;
 }
 
+
 function getPhoto(index) {
 	return {
 		url: 'photos/' + (index + 1) + '.jpg',
@@ -47,9 +48,9 @@ function getPhoto(index) {
 	}; 
 }
 
-var photos = getPhotos(MAX_PHOTOS_COUNT);
+var photos = getPhotos(MAX_PHOTOS_COUNT);// данные и счоздание дааних функция дейтвие
 
-function getPhotos(length) {
+function getPhotos(length) {//создает и возвращает 
 	var photos = [];
 	for (var i = 0; i < length; i++) {
 		var photo = getPhoto(i);
@@ -58,7 +59,6 @@ function getPhotos(length) {
 
 	return photos;
 }
-
 
 var callToTemplate = document.querySelector('#picture').content;//вызвали тег темплейт
 var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
@@ -88,7 +88,6 @@ function renderPhotos(data) {
 
 renderPhotos(photos); 
 
-var dataСomments = getRandomComments();//присваение переменной результат функции
 var actualBigPhoto = photos[getRandomNumber(0,photos.length-1)];//выдает по 1 рандомному фото
 
 function renderBigPhoto(data) {
@@ -104,22 +103,22 @@ function renderBigPhoto(data) {
 	bigPictureLikes.textContent = data.likes;//вывод рандомных лайков
 
 	var bigPictureComments = bigPicture.querySelector('.comments-count');//вывод тега
-	bigPictureComments.innerHTML = dataСomments.length;
+	bigPictureComments.innerHTML = data.comments.length;
 
 	var caption = bigPicture.querySelector('.social__caption');//вывод тега р
 	caption.innerHTML = data.description;//добавлено описание
-
-
+	renderComments(data.comments);
 }
 
-renderBigPhoto(actualBigPhoto);//actualBigPhoto
+renderBigPhoto(actualBigPhoto);
 
-// Список комментариев под фотографией
-var callToMyTemplate = document.querySelector('#my__comment').content;//обращение к темплейту
-var subjectTemplate = callToMyTemplate.querySelector('.social__comment');// вызвали его содержание/тег  li
-var elementMyRender = document.querySelector('.social__comments');//место куда отрисует склонированые дети темплейта
 
 function renderComments(data){ //принимает или один или два обекта
+	// Список комментариев под фотографией
+	var callToMyTemplate = document.querySelector('#my__comment').content;//обращение к темплейту
+	var subjectTemplate = callToMyTemplate.querySelector('.social__comment');// вызвали его содержание/тег  li
+	var elementMyRender = document.querySelector('.social__comments');//место куда отрисует склонированые дети темплейта
+
 	var container = document.createDocumentFragment();
 	for (var i = 0; i < data.length; i++) {
 		var comment = data[i];//елемент массива который выводит обект 
@@ -133,9 +132,7 @@ function renderComments(data){ //принимает или один или дв�
 	elementMyRender.appendChild(container);//должен вставить в ul
 }
 
-renderComments(dataСomments);
-
-// var enumerator = document.querySelector('.social__comment-count');//вывод тега div
-// enumerator.classList.add('visually-hidden');
-// var batch = document.querySelector('.comments-loader');//вывод тега button
-// batch.classList.add('visually-hidden');
+var enumerator = document.querySelector('.social__comment-count');//вывод тега div
+enumerator.classList.add('visually-hidden');
+var batch = document.querySelector('.comments-loader');//вывод тега button
+batch.classList.add('visually-hidden');
