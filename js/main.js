@@ -141,7 +141,7 @@ var setup = document.querySelector('.img-upload__overlay');// Форма ред�
 var setupClose = document.querySelector('#upload-cancel');//Кнопка для закрытия формы редактирования изображения
 var ESC_KEYCODE = 27;
 
-var openPopup = function() {
+function openPopup() {
 	setup.classList.remove('hidden');
 };
 
@@ -149,20 +149,20 @@ var openPopup = function() {
 setupOpen.addEventListener('click', function(){
 	openPopup();
 });
-
-var closePopup = function() {
+function closePopup() {
 	setup.classList.add('hidden');
-};
+}
 //при нажатие на кнопку-хрестик закрыватся окно
 setupClose.addEventListener('click', function(){
 	closePopup();
 });
 //при нажатие на кнопку ESC закрыватся окно
-document.addEventListener('keydown', function(evt){
-	if (evt.keyCode === ESC_KEYCODE){
-		closePopup();
-	}
-});
+function pressEnter(evt){
+	if (evt.target === textarea){
+		return;
+	} else if (evt.keyCode === ESC_KEYCODE){closePopup();}
+}
+document.addEventListener('keydown', pressEnter);
 //2.1. Масштаб
 var lessValue = document.querySelector('.scale__control--smaller');//при нажатии на кнопку меньше
 var moreValue = document.querySelector('.scale__control--bigger');//при нажатии на кнопку больше
@@ -206,37 +206,8 @@ var сolorSlider = document.querySelector('.effect-level__depth');
 pin.style.left =  100 + '%';//по умолчанию максимальное значение
 сolorSlider.style.width = pin.style.left;//цвет линии
 
-//КОД Drag'n'Drop
-// pin.onmousedown = function(event) {
-// 	var shiftX  = event.clientX - pin.getBoundingClientRect().left;
-
-// 	var onMouseMove = function (event) {
-//         var newLeft = event.clientX - shiftX - changeLine.getBoundingClientRect().left;
-//         document.addEventListener('mousemove', onMouseMove);
-//         document.addEventListener('mouseup', onMouseUp);
-// console.log(newLeft)
-//         // если курсор вышел из слайдера
-//         if (newLeft < 0) {
-//           newLeft = 0;
-//         }
-//         var rightEdge = changeLine.offsetWidth - pin.offsetWidth;
-//         if (newLeft > rightEdge) {
-//           newLeft = rightEdge;
-//         }
-
-//         pin.style.left =  newLeft + '%';//логику которою я доперла сама//ФИНАЛОЧКА
-//       }
-//       function onMouseUp() {
-//         document.removeEventListener('mouseup', onMouseUp);
-//         document.removeEventListener('mousemove', onMouseMove);
-//       }
-// };
-//    pin.ondragstart = function() {
-//       return false;
-//     };
-//
 changeLine.addEventListener('click', function(evt){
-	var newLeft = event.clientX - changeLine.getBoundingClientRect().left;
+	var newLeft = evt.clientX - changeLine.getBoundingClientRect().left;
 	var rightEdge = changeLine.offsetWidth - pin.offsetWidth;//длина линии в px
 	var point = (newLeft * 100) / rightEdge;
 	pin.style.left =  point + '%';
@@ -285,44 +256,123 @@ for(var i = 0; i<allSpan.length; i++){
 }
 
 //  ВАЛИДАЦИЯ
-var  fieldsetText = document.querySelector('.img-upload__text');// вывели fieldset
 var inputTags = document.querySelector('.text__hashtags');//достучались до поля хештегов input
-// var maxlengthHashtags = inputTags.setAttribute('maxlength', '20');//ограничили максимальную длину
-// var minlengthHashtags = inputTags.setAttribute('minlength', '1');//ограничили мин длину
 
-function onInputLictener (evt){
-	var target = evt.target;
-	var tagArray = target.value.split(' ');
-	
-	console.log(tagArray)//выводит масива
-	console.log(tagArray.length)// длина масива это количество хештегов
-	//берет всю длину масиива масива 
-	if (tagArray.length > 5) {
-		target.setCustomValidity('нельзя указать больше 5-ти хэш-тегов');
-	};
-	// первый елемент  в хештеге - это #
-	for(var i = 0; i<tagArray.length; i++){
-		if (tagArray[i].charAt(0) != '#') {
-			target.setCustomValidity('нельзя без #')
+function checkForHashSymbol(str) {
+	if (str != '#') {
+		return 'хештег должен начинатся с #';
+	}
+}
+
+function checkForDuplicateHash(tag) {
+	var hashCount = 1;
+
+	for (var i = 1; i < tag.length; i++) {
+		var tagSymbol = tag[i];
+		if (tagSymbol === '#') {
+			hashCount = hashCount + 1;
 		}
-		// хэш-теги разделяются пробелами;
-		var hashCount = 0;
-		var oneHesh = tagArray[i]
-		console.log(oneHesh.length)
-		for (var i = 0; i < oneHesh.length; i++) {//(+)ми берем к-сть раз в залежності від кіль-сті симвалів в слові
-			if (oneHesh[i] === '#') {
-				hashCount = hashCount + 1
-			}
-		}
-		if (hashCount > 1) {
-			target.setCustomValidity('не больше двух #')
-		}
-		//хеш-тег не может состоять только из одной решётки
-		for (var i = 0; i < oneHesh.length; i++) {
-			if(i < 2){
-				target.setCustomValidity('хеш-тег не может состоять только из одной решётки')
+	}
+
+	if (hashCount > 1) {
+		return 'не больше двух #';
+	}
+}
+
+function checkForHashMinLength(tag) {
+	if(tag.length < 2) {
+		return 'хеш-тег не может состоять только из одной решётки';
+	}	
+}
+
+function checkForDuplicateHashTags(tag,list) {
+	console.log(list);
+	var hashCount = 0;
+	for(var i = 0; i < list.length; i++){
+		for(var k = 0; k < list.length; k++){
+			if(list[i] === list[k] && i != k){
+				hashCount = hashCount + 1;
+				console.log(hashCount);
 			}
 		}
 	}
-};
-inputTags.addEventListener('input', onInputLictener)
+	if(hashCount > 1){
+		return 'одинаковые хештеги не допускаются';
+	}
+}
+
+function onInputListener (evt) {
+	var target = evt.target;
+	var tagArray = target.value.split(' ');
+	var allHashLength = 0;
+	var errorText = null;
+	
+	for(var i = 0; i < tagArray.length; i++) {
+		var oneTag = tagArray[i];
+		//количество тегов до 5
+		if (oneTag === '') {
+			return ;
+		}
+
+		allHashLength ++;
+		// первый елемент  в хештеге - это #
+		errorText = checkForHashSymbol(oneTag[0]);
+
+		if (errorText && errorText.length > 0) {
+			target.setCustomValidity(errorText);
+			return;
+		}
+		// в одном хешьтега не больше одной решотки;
+		errorText = checkForDuplicateHash(oneTag);
+
+		if (errorText && errorText.length > 0) {
+			target.setCustomValidity(errorText);
+			return;
+		}
+		//хеш-тег не может состоять только из одной решётки
+		errorText = checkForHashMinLength(oneTag);
+
+		if (errorText && errorText.length > 0) {
+			target.setCustomValidity(errorText);
+			return;
+		}
+		//одинаковые хештеги не допускаются
+		errorText = checkForDuplicateHashTags(oneTag, tagArray);
+
+		if (errorText && errorText.length > 0) {
+			target.setCustomValidity(errorText);
+			return;
+		}
+
+	} 
+	//нельзя указать больше 5-ти хэш-тегов
+	if (allHashLength > 5) {
+		target.setCustomValidity('нельзя указать больше 5-ти хэш-тегов');
+		return;
+	}
+	//длина хештега не должна превышать 20 символов
+	if(oneTag.length > 20){
+		target.setCustomValidity('длина хештега превышает 20 символов');
+		return;
+	}
+
+
+	target.setCustomValidity('');
+}
+
+inputTags.addEventListener('input', onInputListener);
+// коментарии
+var textarea = document.querySelector('.text__description');//достучались до поля коментариев
+
+function onInputTextListener (evt) {
+	var target = evt.target;
+	var text = target.value;
+	if (text.length > 5){
+		textarea.setCustomValidity('длина коментария превышает 140 символов');
+		return;
+	}
+	target.setCustomValidity('');
+}
+textarea.addEventListener('input', onInputTextListener);
+
+
