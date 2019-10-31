@@ -160,9 +160,9 @@ setupClose.addEventListener('click', function(){
 });
 //при нажатие на кнопку ESC закрыватся окно
 function pressEnter(evt){
-	if (evt.target === textarea){
-		return;
-	} else if (evt.keyCode === ESC_KEYCODE){closePopup();}
+	if (evt.target !== textarea && evt.keyCode === ESC_KEYCODE){
+		closePopup();
+	}
 }
 document.addEventListener('keydown', pressEnter);
 //2.1. Масштаб
@@ -171,12 +171,13 @@ var moreValue = document.querySelector('.scale__control--bigger');//при на�
 var changePercent = document.querySelector('.scale__control--value');//окно показа Value
 var changeValue = changePercent.setAttribute('value', 100 + '%');//value изменили по умолчанию 
 var VARIABLE = 25;//величина шага
-var INTEREST_RATE =100; //100%
+var MAX_POINT = 75;
+var INTEREST_RATE = 100; //100%
 //уменьшение
 var onLessClick = function() {
 	var splitUp = changePercent.getAttribute('value').split('%');//разделяем
 	var number = splitUp[0];//достаем цыфровое значение
-	if (number > 25){
+	if (number > VARIABLE){
 		var change = number - VARIABLE;
 		var fraction = change / INTEREST_RATE;
 		previewImg.style.transform = 'scale(' + fraction + ')';
@@ -189,7 +190,7 @@ lessValue.addEventListener('click', onLessClick);
 var onMoreClick = function() {
 	var splitUp = changePercent.getAttribute('value').split('%');
 	var number = Number(splitUp[0]);////достаем цыфровое значение
-	if (number <= 75){
+	if (number <= MAX_POINT){
 		var change = number + VARIABLE;
 		var fraction = change / INTEREST_RATE;
 		previewImg.style.transform = 'scale(' + fraction + ')';
@@ -363,10 +364,14 @@ function checkForDuplicateHashTags(list) {
 }
 
 function onInputListener (evt) {
+	var COUNT_WORDS = 5;
+	var LENGTH_WORD = 20;
+	var LENGTH_TEXT = 140;
 	var target = evt.target;
 	var tagArray = target.value.split(' ');
 	var allHashLength = 0;
 	var errorText = null;
+
 	
 	for(var i = 0; i < tagArray.length; i++) {
 		var oneTag = tagArray[i];
@@ -407,12 +412,12 @@ function onInputListener (evt) {
 
 	} 
 	//нельзя указать больше 5-ти хэш-тегов
-	if (allHashLength > 5) {
+	if (allHashLength > WORDS_COUNT) {
 		target.setCustomValidity('нельзя указать больше 5-ти хэш-тегов');
 		return;
 	}
 	//длина хештега не должна превышать 20 символов
-	if(oneTag.length > 20){
+	if(oneTag.length > LENGTH_WORD){
 		target.setCustomValidity('длина хештега превышает 20 символов');
 		return;
 	}
@@ -427,7 +432,7 @@ var textarea = document.querySelector('.text__description');//достучали
 function onInputTextListener (evt) {
 	var target = evt.target;
 	var text = target.value;
-	if (text.length > 140){
+	if (text.length > LENGTH_TEXT){
 		textarea.setCustomValidity('длина коментария превышает 140 символов');
 		return;
 	}
