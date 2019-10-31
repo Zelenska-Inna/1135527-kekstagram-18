@@ -63,8 +63,8 @@ function getPhotos(length) {//создает и возвращает
 function renderBigPhoto(data) {
 
 	var bigPicture = document.querySelector('.big-picture');//вывод тега section
-	//bigPicture.classList.remove('hidden');//удаление
 	showStyle(bigPicture);
+
 	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
 	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
 	bigImg.src = data.url;
@@ -127,15 +127,37 @@ var callToTemplate = document.querySelector('#picture').content;//вызвали
 var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
 var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
 
-renderPhotos(photos); 
+renderPhotos(photos);
 
 var enumerator = document.querySelector('.social__comment-count');
 enumerator.classList.add('visually-hidden');//прячет комментарии к изображению
 var batch = document.querySelector('.comments-loader');//вывод тега button
 batch.classList.add('visually-hidden');// прячет кнопку для загрузки новой порции комментариев
 
+function onPreviewClick(evt){
+// evt.preventDefault();
+
+	if (evt.target.className === 'picture__img') {// тег img
+		var imgSrc = evt.target.src.split('/');
+		var imgSrcLast= imgSrc.pop().split('.');
+		var imgSrcNumber = imgSrcLast[0] - 1;
+		renderBigPhoto(photos[imgSrcNumber]);
+	}
+}
+
+elementRender.addEventListener('click', onPreviewClick);
+
+
+//при нажатие на кнопку-хрестик закрыватся окно
+var pictureCancelButton = document.querySelector('#picture-cancel');
+
+pictureCancelButton.addEventListener('click', function(){
+	var bigPicture = document.querySelector('.big-picture');//вывод тега section
+	hideStyle(bigPicture);
+});
+
 //задание 4. Обработка событий 
-var setupOpen = document.querySelector('#upload-file');//label - окно вызова загрузки фото
+var setupOpen = document.querySelector('.img-upload__label');//label - окно вызова загрузки фото #upload-file
 var setup = document.querySelector('.img-upload__overlay');// Форма редактирования изображения
 var setupClose = document.querySelector('#upload-cancel');//Кнопка для закрытия формы редактирования изображения
 var ESC_KEYCODE = 27;
@@ -167,7 +189,7 @@ document.addEventListener('keydown', pressEnter);
 var lessValue = document.querySelector('.scale__control--smaller');//при нажатии на кнопку меньше
 var moreValue = document.querySelector('.scale__control--bigger');//при нажатии на кнопку больше
 var changePercent = document.querySelector('.scale__control--value');//окно показа Value
-var changeValue = changePercent.setAttribute('value', 100 + '%');//value изменили по умолчанию 
+changePercent.setAttribute('value', 100 + '%');//value изменили по умолчанию 
 var VARIABLE = 25;//величина шага
 var MAX_POINT = 75;
 var INTEREST_RATE = 100; //100%
@@ -217,7 +239,7 @@ var FILTERS = {
 var allFilters = document.querySelectorAll('.effects__preview');//все фильтры
 var previewImg = document.querySelector('.img-upload__preview').querySelector('img');//Предварительный просмотр фотографии
 var slider = document.querySelector('.img-upload__effect-level');// слайдер 
-var sliderNone = slider.classList.add('hidden'); //!!по умолчанию слайдер скрыт
+slider.classList.add('hidden'); //!!по умолчанию слайдер скрыт
 var pin = slider.querySelector('.effect-level__pin');// Кнопка изменения глубины эффекта фотографии
 var changeLine = document.querySelector('.effect-level__line');// линия по которой бегает pin
 var сolorSlider = document.querySelector('.effect-level__depth');
@@ -250,6 +272,7 @@ function hideStyle(element) {
 // добавление ползунка
 function showStyle(element) {
 	element.classList.remove('hidden');
+
 }
 
 //снимает фильт 
