@@ -1,3 +1,5 @@
+'use strict';
+
 var MAX_PHOTOS_COUNT = 25;
 var COUNT = {
 	MIN: 1,
@@ -127,7 +129,7 @@ var elementRender = document.querySelector('.pictures');//место куда о
 
 renderPhotos(photos); 
 var actualBigPhoto = photos[getRandomNumber(0,photos.length-1)];//выдает по 1 рандомному фото
-// renderBigPhoto(actualBigPhoto);этот код не удалять так нада при след заданиях
+//renderBigPhoto(actualBigPhoto); //этот код не удалять так нада при след заданиях
 
 
 var enumerator = document.querySelector('.social__comment-count');
@@ -143,7 +145,7 @@ var ESC_KEYCODE = 27;
 
 function openPopup() {
 	setup.classList.remove('hidden');
-};
+}
 
 //при нажатие на кнопку открывается окно загрузки фото
 setupOpen.addEventListener('click', function(){
@@ -167,11 +169,7 @@ document.addEventListener('keydown', pressEnter);
 var lessValue = document.querySelector('.scale__control--smaller');//при нажатии на кнопку меньше
 var moreValue = document.querySelector('.scale__control--bigger');//при нажатии на кнопку больше
 var changePercent = document.querySelector('.scale__control--value');//окно показа Value
-var changeValue = changePercent.setAttribute('value', 100+'%');//value изменили по умолчанию 
-var previewImg = document.querySelector('.img-upload__preview').querySelector('img');//Предварительный просмотр фотографии
-var changeClass = previewImg.classList.add('effects__preview--none');//Превью фото без эффекта - Оригинал
-var pin = document.querySelector('.effect-level__pin');//макс значення Кнопка изменения глубины эффекта фотографии
-var changeSlider = document.querySelector('.effect-level__value');//лінія
+var changeValue = changePercent.setAttribute('value', 100 + '%');//value изменили по умолчанию 
 var VARIABLE = 25;//величина шага
 var INTEREST_RATE =100; //100%
 //уменьшение
@@ -200,60 +198,119 @@ var onMoreClick = function() {
 	}
 };
 moreValue.addEventListener('click', onMoreClick);
-//ползунок
-var changeLine = document.querySelector('.effect-level__line');
-var сolorSlider = document.querySelector('.effect-level__depth');
-pin.style.left =  100 + '%';//по умолчанию максимальное значение
-сolorSlider.style.width = pin.style.left;//цвет линии
-
-changeLine.addEventListener('click', function(evt){
-	var newLeft = evt.clientX - changeLine.getBoundingClientRect().left;
-	var rightEdge = changeLine.offsetWidth - pin.offsetWidth;//длина линии в px
-	var point = (newLeft * 100) / rightEdge;
-	pin.style.left =  point + '%';
-	сolorSlider.style.width = pin.style.left;
-});
 
 //Наложение эффекта на изображение
-var sliderNone = document.querySelector('.img-upload__effect-level').classList.add('hidden');
-var allSpan = document.querySelectorAll('.effects__preview');
 
-function onClickLictener(evt){ 
-	pin.style.left =  100 + '%';
-	сolorSlider.style.width = pin.style.left;
-	var classRandom = evt.target.className.split('--');
-	var filter = classRandom[1];
-	if( filter =='none'){
-		var filter = 'none';
-		previewImg.style.filter = filter;
-		var sliderNone = document.querySelector('.img-upload__effect-level').classList.add('hidden');
-	}else if( filter =='chrome'){
-		var sliderNone = document.querySelector('.img-upload__effect-level').classList.remove('hidden');
-		var filter = 'grayscale';
-		previewImg.style.filter = filter + '(' + 1 + ')';
-	}else if( filter =='sepia'){
-		var sliderNone = document.querySelector('.img-upload__effect-level').classList.remove('hidden');
-		var filter = 'sepia';
-		previewImg.style.filter = filter + '(' + 1 + ')';
-	}else if( filter =='marvin'){
-		var sliderNone = document.querySelector('.img-upload__effect-level').classList.remove('hidden');
-		var filter = 'invert';
-		previewImg.style.filter = filter + '(' + 100 + '%)';
-	}else if( filter =='phobos'){
-		var sliderNone = document.querySelector('.img-upload__effect-level').classList.remove('hidden');
-		var filter = 'blur';
-		previewImg.style.filter = filter + '(' + 3 + 'px)';
-	}else if( filter =='heat'){
-		var sliderNone = document.querySelector('.img-upload__effect-level').classList.remove('hidden');
-		var filter = 'brightness';
-		previewImg.style.filter = filter + '(' + 3 + ')';
+var FILTER_BLUR = 3;
+var FILTER_BRIGHTNESS = {
+	MIN: 1,
+	MAX: 3,
+};
+
+var FILTERS = {
+	'none':'effects__preview--none',
+	'chrome': 'effects__preview--chrome',
+	'sepia': 'effects__preview--sepia',
+	'marvin': 'effects__preview--marvin',
+	'phobos': 'effects__preview--phobos',
+	'heat': 'effects__preview--heat',
+};
+var allSpan = document.querySelectorAll('.effects__preview');//все фильтры
+var previewImg = document.querySelector('.img-upload__preview').querySelector('img');//Предварительный просмотр фотографии
+var pin = document.querySelector('.effect-level__pin');// Кнопка изменения глубины эффекта фотографии
+var changeLine = document.querySelector('.effect-level__line');// линия по которой бегает pin
+var сolorSlider = document.querySelector('.effect-level__depth');
+var sliderNone = document.querySelector('.img-upload__effect-level').classList.add('hidden'); //!!по умолчанию ползунок скрыт
+
+//изменени насыщености
+function  getChangeFilter(point){
+
+	var filter = previewImg.classList.value;// передается клас на который нажимаем
+	
+
+	if( filter === FILTERS['none']){
+		previewImg.style.filter = 'none';
+	}else if( filter === FILTERS['chrome']){
+		previewImg.style.filter = 'grayscale'+ '(' + point / 100 + ')';
+	}else if( filter === FILTERS['sepia']){
+		previewImg.style.filter = 'sepia' + '(' + point / 100 + ')';
+	}else if( filter === FILTERS['marvin']){
+		previewImg.style.filter = 'invert' + '(' + point + '%)';
+	}else if( filter === FILTERS['phobos']){
+		previewImg.style.filter = 'blur' + '(' + FILTER_BLUR * point / 100 + 'px)';
+	}else if( filter === FILTERS['heat']){
+		previewImg.style.filter = 'brightness' + '(' + point / 100 * (FILTER_BRIGHTNESS.MAX - FILTER_BRIGHTNESS.MIN) + FILTER_BRIGHTNESS.MIN + ')';
 	}
 
 }
 
-for(var i = 0; i<allSpan.length; i++){
-	allSpan[i].addEventListener('click',onClickLictener,true);
+//снимает фильт 
+function removeFiter() {
+	previewImg.classList = '';
+	previewImg.style.filter = ''; //фильтр равно пустая строка тоесть не будет фильтра
 }
+
+//добавляет фильтри
+function addFiter(evt) {
+  
+	previewImg.classList = '';
+	previewImg.style.filter = '';
+	previewImg.classList.add(evt);
+	// по умолчанию
+	pin.style.left = 100 + '%';//по умолчанию максимальное значение
+	сolorSlider.style.width = pin.style.left; //по умолчанию цвет линии
+}
+//слушает все фыльтры
+function changeFiter(evt){
+	var classRandom = evt.target.className.split(' ');// розделили на масив
+	var classFilter = classRandom[2]; // взяли тертью часть класа
+
+	if (classFilter == 'effects__preview--none'){
+		sliderNone = document.querySelector('.img-upload__effect-level').classList.add('hidden');
+		removeFiter();
+		return;
+	}
+
+	sliderNone = document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+	addFiter(classFilter);
+}
+
+for(var i = 0; i < allSpan.length; i++){
+	allSpan[i].addEventListener('click', changeFiter);
+}
+
+
+// Ползунок
+pin.addEventListener('mousedown', function (evt) {
+	var startCoords = evt.clientX;//точка нажатия 
+
+	function onMouseMove(moveEvt){
+		var shift = startCoords - moveEvt.clientX;//точка клика - то на сколько елементов подвинули
+		startCoords = moveEvt.clientX;//новая точка координат 
+		var newLeft = pin.offsetLeft - shift;
+
+		if(newLeft < 0 ){
+			newLeft = changeLine.offsetLeft + 'px';
+		} else if(newLeft > changeLine.getBoundingClientRect().width ) {
+			newLeft = changeLine.getBoundingClientRect().width + 'px';
+		}else{
+			pin.style.left = newLeft + 'px';
+			var point = Math.floor(newLeft * 100 / changeLine.offsetWidth);
+			сolorSlider.style.width = point + '%';
+			
+			getChangeFilter(point);
+		}
+	}
+
+	function onMouseUp(upEvt) {
+		upEvt.preventDefault();
+		document.removeEventListener('mousemove', onMouseMove);
+		document.removeEventListener('mouseup', onMouseUp);
+	}
+
+	document.addEventListener('mousemove', onMouseMove);
+	document.addEventListener('mouseup', onMouseUp);
+});
 
 //  ВАЛИДАЦИЯ
 var inputTags = document.querySelector('.text__hashtags');//достучались до поля хештегов input
@@ -285,20 +342,16 @@ function checkForHashMinLength(tag) {
 	}	
 }
 
-function checkForDuplicateHashTags(tag,list) {
-	console.log(list);
-	var hashCount = 0;
+function checkForDuplicateHashTags(list) {
+	
 	for(var i = 0; i < list.length; i++){
 		for(var k = 0; k < list.length; k++){
 			if(list[i] === list[k] && i != k){
-				hashCount = hashCount + 1;
-				console.log(hashCount);
+				return 'одинаковые хештеги не допускаются';
 			}
 		}
 	}
-	if(hashCount > 1){
-		return 'одинаковые хештеги не допускаются';
-	}
+	
 }
 
 function onInputListener (evt) {
@@ -337,7 +390,7 @@ function onInputListener (evt) {
 			return;
 		}
 		//одинаковые хештеги не допускаются
-		errorText = checkForDuplicateHashTags(oneTag, tagArray);
+		errorText = checkForDuplicateHashTags(tagArray);
 
 		if (errorText && errorText.length > 0) {
 			target.setCustomValidity(errorText);
@@ -356,7 +409,6 @@ function onInputListener (evt) {
 		return;
 	}
 
-
 	target.setCustomValidity('');
 }
 
@@ -367,12 +419,13 @@ var textarea = document.querySelector('.text__description');//достучали
 function onInputTextListener (evt) {
 	var target = evt.target;
 	var text = target.value;
-	if (text.length > 5){
+	if (text.length > 140){
 		textarea.setCustomValidity('длина коментария превышает 140 символов');
 		return;
 	}
 	target.setCustomValidity('');
 }
 textarea.addEventListener('input', onInputTextListener);
+
 
 
