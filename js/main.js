@@ -63,8 +63,8 @@ function getPhotos(length) {//создает и возвращает
 function renderBigPhoto(data) {
 
 	var bigPicture = document.querySelector('.big-picture');//вывод тега section
-	bigPicture.classList.remove('hidden');//удаление
-
+	//bigPicture.classList.remove('hidden');//удаление
+	showStyle(bigPicture);
 	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
 	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
 	bigImg.src = data.url;
@@ -128,9 +128,6 @@ var contentsTemplate = callToTemplate.querySelector('.picture');// вызвал�
 var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
 
 renderPhotos(photos); 
-var actualBigPhoto = photos[getRandomNumber(0,photos.length-1)];//выдает по 1 рандомному фото
-//renderBigPhoto(actualBigPhoto); //этот код не удалять так нада при след заданиях
-
 
 var enumerator = document.querySelector('.social__comment-count');
 enumerator.classList.add('visually-hidden');//прячет комментарии к изображению
@@ -165,6 +162,7 @@ function pressEnter(evt){
 	}
 }
 document.addEventListener('keydown', pressEnter);
+
 //2.1. Масштаб
 var lessValue = document.querySelector('.scale__control--smaller');//при нажатии на кнопку меньше
 var moreValue = document.querySelector('.scale__control--bigger');//при нажатии на кнопку больше
@@ -216,14 +214,14 @@ var FILTERS = {
 	'phobos': 'effects__preview--phobos',
 	'heat': 'effects__preview--heat',
 };
-var allSpan = document.querySelectorAll('.effects__preview');//все фильтры
+var allFilters = document.querySelectorAll('.effects__preview');//все фильтры
 var previewImg = document.querySelector('.img-upload__preview').querySelector('img');//Предварительный просмотр фотографии
-var slider = document.querySelector('.img-upload__effect-level')// слайдер 
+var slider = document.querySelector('.img-upload__effect-level');// слайдер 
 var sliderNone = slider.classList.add('hidden'); //!!по умолчанию слайдер скрыт
 var pin = slider.querySelector('.effect-level__pin');// Кнопка изменения глубины эффекта фотографии
 var changeLine = document.querySelector('.effect-level__line');// линия по которой бегает pin
 var сolorSlider = document.querySelector('.effect-level__depth');
-var changeRichness = document.querySelector('.effect-level__value');//input линии который удаляется
+
 //изменени насыщености
 function  getChangeFilter(point){
 
@@ -246,12 +244,12 @@ function  getChangeFilter(point){
 
 }
 //удаление ползунка
-function hideSlider(element) {
+function hideStyle(element) {
 	element.classList.add('hidden');
 }
 // добавление ползунка
-function showSlider(element) {
-	element.classList.remove('hidden')
+function showStyle(element) {
+	element.classList.remove('hidden');
 }
 
 //снимает фильт 
@@ -276,16 +274,16 @@ function changeFiter(evt){
 	var classFilter = classRandom[2]; // взяли тертью часть класа
 
 	if (classFilter == 'effects__preview--none'){
-		hideSlider(slider);
+		hideStyle(slider);
 		removeFiter();
 		return;
 	}
-	showSlider(slider);
+	showStyle(slider);
 	addFiter(classFilter);
 }
 
-for(var i = 0; i < allSpan.length; i++){
-	allSpan[i].addEventListener('click', changeFiter);
+for(var i = 0; i < allFilters.length; i++){
+	allFilters[i].addEventListener('click', changeFiter);
 }
 
 
@@ -336,7 +334,7 @@ function checkForDuplicateHash(tag) {
 	for (var i = 1; i < tag.length; i++) {
 		var tagSymbol = tag[i];
 		if (tagSymbol === '#') {
-			hashCount = hashCount + 1;
+			hashCount += 1;
 		}
 	}
 
@@ -366,12 +364,10 @@ function checkForDuplicateHashTags(list) {
 function onInputListener (evt) {
 	var COUNT_WORDS = 5;
 	var LENGTH_WORD = 20;
-	var LENGTH_TEXT = 140;
 	var target = evt.target;
 	var tagArray = target.value.split(' ');
 	var allHashLength = 0;
 	var errorText = null;
-
 	
 	for(var i = 0; i < tagArray.length; i++) {
 		var oneTag = tagArray[i];
@@ -412,7 +408,7 @@ function onInputListener (evt) {
 
 	} 
 	//нельзя указать больше 5-ти хэш-тегов
-	if (allHashLength > WORDS_COUNT) {
+	if (allHashLength > COUNT_WORDS) {
 		target.setCustomValidity('нельзя указать больше 5-ти хэш-тегов');
 		return;
 	}
@@ -430,6 +426,7 @@ inputTags.addEventListener('input', onInputListener);
 var textarea = document.querySelector('.text__description');//достучались до поля коментариев
 
 function onInputTextListener (evt) {
+	var LENGTH_TEXT = 140;
 	var target = evt.target;
 	var text = target.value;
 	if (text.length > LENGTH_TEXT){
