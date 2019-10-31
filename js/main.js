@@ -217,11 +217,12 @@ var FILTERS = {
 };
 var allSpan = document.querySelectorAll('.effects__preview');//все фильтры
 var previewImg = document.querySelector('.img-upload__preview').querySelector('img');//Предварительный просмотр фотографии
-var pin = document.querySelector('.effect-level__pin');// Кнопка изменения глубины эффекта фотографии
+var slider = document.querySelector('.img-upload__effect-level')// слайдер 
+var sliderNone = slider.classList.add('hidden'); //!!по умолчанию слайдер скрыт
+var pin = slider.querySelector('.effect-level__pin');// Кнопка изменения глубины эффекта фотографии
 var changeLine = document.querySelector('.effect-level__line');// линия по которой бегает pin
 var сolorSlider = document.querySelector('.effect-level__depth');
-var sliderNone = document.querySelector('.img-upload__effect-level').classList.add('hidden'); //!!по умолчанию ползунок скрыт
-
+var changeRichness = document.querySelector('.effect-level__value');//input линии который удаляется
 //изменени насыщености
 function  getChangeFilter(point){
 
@@ -243,11 +244,19 @@ function  getChangeFilter(point){
 	}
 
 }
+//удаление ползунка
+function hideSlider(element) {
+	element.classList.add('hidden');
+}
+// добавление ползунка
+function showSlider(element) {
+	element.classList.remove('hidden')
+}
 
 //снимает фильт 
 function removeFiter() {
 	previewImg.classList = '';
-	previewImg.style.filter = ''; //фильтр равно пустая строка тоесть не будет фильтра
+	previewImg.style.filter = ''; // тоесть не будет фильтра
 }
 
 //добавляет фильтри
@@ -266,12 +275,11 @@ function changeFiter(evt){
 	var classFilter = classRandom[2]; // взяли тертью часть класа
 
 	if (classFilter == 'effects__preview--none'){
-		sliderNone = document.querySelector('.img-upload__effect-level').classList.add('hidden');
+		hideSlider(slider);
 		removeFiter();
 		return;
 	}
-
-	sliderNone = document.querySelector('.img-upload__effect-level').classList.remove('hidden');
+	showSlider(slider);
 	addFiter(classFilter);
 }
 
