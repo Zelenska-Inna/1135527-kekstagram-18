@@ -135,7 +135,11 @@ var batch = document.querySelector('.comments-loader');//вывод тега but
 batch.classList.add('visually-hidden');// прячет кнопку для загрузки новой порции комментариев
 
 function onPreviewClick(evt){
+
+
 	evt.preventDefault();
+	event.stopPropagation()
+	
 
 	if (evt.target.className === 'picture__img') {// тег img
 		var imgSrc = evt.target.src.split('/');
@@ -147,6 +151,20 @@ function onPreviewClick(evt){
 
 elementRender.addEventListener('click', onPreviewClick);
 
+function hideElement(element) {
+	element.classList.add('hidden');
+	
+}
+// добавление ползунка
+function showElement(element) {
+	if (element.classList.contains('hidden')) {
+		element.classList.remove('hidden');
+		
+	} else if (element.classList.contains('visually-hidden')) {
+		element.classList.remove('visually-hidden');
+		
+	}
+}
 
 //при нажатие на кнопку-хрестик закрыватся окно
 var pictureCancelButton = document.querySelector('#picture-cancel');
@@ -164,10 +182,13 @@ var ESC_KEYCODE = 27;
 
 function openPopup(date) {
 	date.classList.remove('hidden');
+	
 }
 
 function closePopup(date) {
 	date.classList.add('hidden');
+	
+
 }
 //при нажатие на кнопку открывается окно загрузки фото
 setupOpen.addEventListener('click', function(){
@@ -176,6 +197,9 @@ setupOpen.addEventListener('click', function(){
 //при нажатие на кнопку-хрестик закрыватся окно
 setupClose.addEventListener('click', function(){
 	closePopup(setup);
+			if (event.defaultPrevented) return;
+
+	
 });
 //при нажатие на кнопку ESC закрыватся окно
 function pressEnter(evt){
@@ -266,17 +290,20 @@ function  getChangeFilter(point){
 
 }
 //удаление ползунка
-function hideElement(element) {
-	element.classList.add('hidden');
-}
-// добавление ползунка
-function showElement(element) {
-	if (element.classList.contains('hidden')) {
-		element.classList.remove('hidden');
-	} else if (element.classList.contains('visually-hidden')) {
-		element.classList.remove('visually-hidden');
-	}
-}
+// function hideElement(element) {
+// 	element.classList.add('hidden');
+// 	return
+// }
+// // добавление ползунка
+// function showElement(element) {
+// 	if (element.classList.contains('hidden')) {
+// 		element.classList.remove('hidden');
+// 		return
+// 	} else if (element.classList.contains('visually-hidden')) {
+// 		element.classList.remove('visually-hidden');
+// 		return
+// 	}
+// }
 
 //снимает фильт 
 function removeFiter() {
@@ -302,7 +329,6 @@ function changeFiter(evt){
 	if (classFilter == 'effects__preview--none'){
 		hideElement(slider);
 		removeFiter();
-		return;
 	}
 	showElement(slider);
 	addFiter(classFilter);
@@ -315,9 +341,13 @@ for(var i = 0; i < allFilters.length; i++){
 
 // Ползунок
 pin.addEventListener('mousedown', function (evt) {
+	evt.preventDefault();
+
 	var startCoords = evt.clientX;//точка нажатия 
 
 	function onMouseMove(moveEvt){
+		evt.preventDefault();
+
 		var shift = startCoords - moveEvt.clientX;//точка клика - то на сколько елементов подвинули
 		startCoords = moveEvt.clientX;//новая точка координат 
 		var newLeft = pin.offsetLeft - shift;
