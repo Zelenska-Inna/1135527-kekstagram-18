@@ -63,7 +63,7 @@ function getPhotos(length) {//создает и возвращает
 function renderBigPhoto(data) {
 
 	var bigPicture = document.querySelector('.big-picture');//вывод тега section
-	showStyle(bigPicture);
+	showElement(bigPicture);
 
 	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
 	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
@@ -135,7 +135,7 @@ var batch = document.querySelector('.comments-loader');//вывод тега but
 batch.classList.add('visually-hidden');// прячет кнопку для загрузки новой порции комментариев
 
 function onPreviewClick(evt){
-// evt.preventDefault();
+	evt.preventDefault();
 
 	if (evt.target.className === 'picture__img') {// тег img
 		var imgSrc = evt.target.src.split('/');
@@ -153,7 +153,7 @@ var pictureCancelButton = document.querySelector('#picture-cancel');
 
 pictureCancelButton.addEventListener('click', function(){
 	var bigPicture = document.querySelector('.big-picture');//вывод тега section
-	hideStyle(bigPicture);
+	hideElement(bigPicture);
 });
 
 //задание 4. Обработка событий 
@@ -162,25 +162,25 @@ var setup = document.querySelector('.img-upload__overlay');// Форма ред�
 var setupClose = document.querySelector('#upload-cancel');//Кнопка для закрытия формы редактирования изображения
 var ESC_KEYCODE = 27;
 
-function openPopup() {
-	setup.classList.remove('hidden');
+function openPopup(date) {
+	date.classList.remove('hidden');
 }
 
+function closePopup(date) {
+	date.classList.add('hidden');
+}
 //при нажатие на кнопку открывается окно загрузки фото
 setupOpen.addEventListener('click', function(){
-	openPopup();
+	openPopup(setup);
 });
-function closePopup() {
-	setup.classList.add('hidden');
-}
 //при нажатие на кнопку-хрестик закрыватся окно
 setupClose.addEventListener('click', function(){
-	closePopup();
+	closePopup(setup);
 });
 //при нажатие на кнопку ESC закрыватся окно
 function pressEnter(evt){
 	if (evt.target !== textarea && evt.keyCode === ESC_KEYCODE){
-		closePopup();
+		closePopup(setup);
 	}
 }
 document.addEventListener('keydown', pressEnter);
@@ -266,13 +266,16 @@ function  getChangeFilter(point){
 
 }
 //удаление ползунка
-function hideStyle(element) {
+function hideElement(element) {
 	element.classList.add('hidden');
 }
 // добавление ползунка
-function showStyle(element) {
-	element.classList.remove('hidden');
-
+function showElement(element) {
+	if (element.classList.contains('hidden')) {
+		element.classList.remove('hidden');
+	} else if (element.classList.contains('visually-hidden')) {
+		element.classList.remove('visually-hidden');
+	}
 }
 
 //снимает фильт 
@@ -297,11 +300,11 @@ function changeFiter(evt){
 	var classFilter = classRandom[2]; // взяли тертью часть класа
 
 	if (classFilter == 'effects__preview--none'){
-		hideStyle(slider);
+		hideElement(slider);
 		removeFiter();
 		return;
 	}
-	showStyle(slider);
+	showElement(slider);
 	addFiter(classFilter);
 }
 
