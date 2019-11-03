@@ -35,6 +35,7 @@ function getRandomComments() {
 			names: names[getRandomNumber(0, names.length - 1)],
 			avatar: 'img/avatar-' + randomIndexAvatar + '.svg', // генерит рандом автара
 		});
+
 	}
 
 	return randomComments;
@@ -63,8 +64,8 @@ function getPhotos(length) {//создает и возвращает
 function renderBigPhoto(data) {
 
 	var bigPicture = document.querySelector('.big-picture');//вывод тега section
-	showElement(bigPicture);
-
+		
+	//openPopup(bigPicture)
 	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
 	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
 	bigImg.src = data.url;
@@ -109,6 +110,7 @@ function renderPhotos(data) {
 
 		var element = contentsTemplate.cloneNode(true); //клонирование тег а и дети 
 		var img = element.querySelector('img');
+		img.setAttribute('tabindex', 0);
 
 		element.href = actualPhoto.url; // где url это ключ обьекта 
 		img.src = actualPhoto.url;
@@ -129,49 +131,43 @@ var elementRender = document.querySelector('.pictures');//место куда о
 
 renderPhotos(photos);
 
+var pictureCancelButton = document.querySelector('#picture-cancel');
 var enumerator = document.querySelector('.social__comment-count');
 enumerator.classList.add('visually-hidden');//прячет комментарии к изображению
 var batch = document.querySelector('.comments-loader');//вывод тега button
 batch.classList.add('visually-hidden');// прячет кнопку для загрузки новой порции комментариев
+// тест
+var previewAllImg = document.querySelectorAll('.picture__img');//массив маленьких 
+var bigPicture = document.querySelector('.big-picture');//вывод тега section
 
-function onPreviewClick(evt){
 
+function getBigPhoto(smallFoto, bigFoto) {
 
-	evt.preventDefault();
-	event.stopPropagation()
-	
+	smallFoto.addEventListener('click', function (evt) {
+		evt.preventDefault();
+		openPopup(bigPicture);
+		renderBigPhoto(bigFoto); // bigFoto и evt.target выдают одинаковые фото
+	});
+	smallFoto.addEventListener('keydown', function (evt){
+		
+		if (evt.keyCode === ENTER_KEYCODE){
+			evt.preventDefault();
+			openPopup(bigPicture);
+			renderBigPhoto(bigFoto);
+		}
 
-	if (evt.target.className === 'picture__img') {// тег img
-		var imgSrc = evt.target.src.split('/');
-		var imgSrcLast= imgSrc.pop().split('.');
-		var imgSrcNumber = imgSrcLast[0] - 1;
-		renderBigPhoto(photos[imgSrcNumber]);
-	}
+	} );
 }
 
-elementRender.addEventListener('click', onPreviewClick);
 
-function hideElement(element) {
-	element.classList.add('hidden');
-	
-}
-// добавление ползунка
-function showElement(element) {
-	if (element.classList.contains('hidden')) {
-		element.classList.remove('hidden');
-		
-	} else if (element.classList.contains('visually-hidden')) {
-		element.classList.remove('visually-hidden');
-		
-	}
+//
+for (var k = 0; k < previewAllImg.length; k++) {//масив маленьких фото
+	getBigPhoto(previewAllImg[k], photos[k]);// массив маленьких и массив большых фото
 }
 
 //при нажатие на кнопку-хрестик закрыватся окно
-var pictureCancelButton = document.querySelector('#picture-cancel');
-
 pictureCancelButton.addEventListener('click', function(){
-	var bigPicture = document.querySelector('.big-picture');//вывод тега section
-	hideElement(bigPicture);
+	closePopup(bigPicture);
 });
 
 //задание 4. Обработка событий 
@@ -179,17 +175,20 @@ var setupOpen = document.querySelector('.img-upload__label');//label - окно 
 var setup = document.querySelector('.img-upload__overlay');// Форма редактирования изображения
 var setupClose = document.querySelector('#upload-cancel');//Кнопка для закрытия формы редактирования изображения
 var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
+
+
+//открыть 
 function openPopup(date) {
 	date.classList.remove('hidden');
-	
 }
-
+//закрыть
 function closePopup(date) {
 	date.classList.add('hidden');
-	
-
 }
+
+
 //при нажатие на кнопку открывается окно загрузки фото
 setupOpen.addEventListener('click', function(){
 	openPopup(setup);
@@ -197,17 +196,24 @@ setupOpen.addEventListener('click', function(){
 //при нажатие на кнопку-хрестик закрыватся окно
 setupClose.addEventListener('click', function(){
 	closePopup(setup);
-			if (event.defaultPrevented) return;
-
-	
 });
-//при нажатие на кнопку ESC закрыватся окно
-function pressEnter(evt){
+//как оптимизировать?
+//при нажатие на кнопку ESC закрыватся окноx редактирования кода
+function pressEscSetup(evt){
 	if (evt.target !== textarea && evt.keyCode === ESC_KEYCODE){
 		closePopup(setup);
 	}
 }
-document.addEventListener('keydown', pressEnter);
+document.addEventListener('keydown', pressEscSetup);
+
+//закритие отрисовки большого фото
+function pressEscBigPicture(evt){
+	if (evt.keyCode === ESC_KEYCODE){
+		closePopup(bigPicture);
+	}
+}
+document.addEventListener('keydown', pressEscBigPicture);
+
 
 //2.1. Масштаб
 var lessValue = document.querySelector('.scale__control--smaller');//при нажатии на кнопку меньше
@@ -289,21 +295,6 @@ function  getChangeFilter(point){
 	}
 
 }
-//удаление ползунка
-// function hideElement(element) {
-// 	element.classList.add('hidden');
-// 	return
-// }
-// // добавление ползунка
-// function showElement(element) {
-// 	if (element.classList.contains('hidden')) {
-// 		element.classList.remove('hidden');
-// 		return
-// 	} else if (element.classList.contains('visually-hidden')) {
-// 		element.classList.remove('visually-hidden');
-// 		return
-// 	}
-// }
 
 //снимает фильт 
 function removeFiter() {
@@ -327,10 +318,11 @@ function changeFiter(evt){
 	var classFilter = classRandom[2]; // взяли тертью часть класа
 
 	if (classFilter == 'effects__preview--none'){
-		hideElement(slider);
+		closePopup(slider);
 		removeFiter();
+		return;
 	}
-	showElement(slider);
+	openPopup(slider);
 	addFiter(classFilter);
 }
 
@@ -341,13 +333,9 @@ for(var i = 0; i < allFilters.length; i++){
 
 // Ползунок
 pin.addEventListener('mousedown', function (evt) {
-	evt.preventDefault();
-
 	var startCoords = evt.clientX;//точка нажатия 
 
 	function onMouseMove(moveEvt){
-		evt.preventDefault();
-
 		var shift = startCoords - moveEvt.clientX;//точка клика - то на сколько елементов подвинули
 		startCoords = moveEvt.clientX;//новая точка координат 
 		var newLeft = pin.offsetLeft - shift;
