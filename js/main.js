@@ -44,7 +44,7 @@ function getRandomComments() {
 function getPhoto(index) {
 	return {
 		url: 'photos/' + (index + 1) + '.jpg',
-		description: 'fasdfs',
+		description: 'Автор',
 		likes: getRandomNumber(COUNT_LIKES.MIN, COUNT_LIKES.MAX),
 		comments: getRandomComments(index),
 	}; 
@@ -65,7 +65,6 @@ function renderBigPhoto(data) {
 
 	var bigPicture = document.querySelector('.big-picture');//вывод тега section
 		
-	//openPopup(bigPicture)
 	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
 	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
 	bigImg.src = data.url;
@@ -80,13 +79,14 @@ function renderBigPhoto(data) {
 	caption.innerHTML = data.description;//добавлено описание
 	renderComments(data.comments);
 }
-
+// Список комментариев под фотографией
 function renderComments(data){ //принимает или один или два обекта
-	// Список комментариев под фотографией
+
 	var callToMyTemplate = document.querySelector('#my__comment').content;//обращение к темплейту
 	var subjectTemplate = callToMyTemplate.querySelector('.social__comment');// вызвали его содержание/тег  li
 	var elementMyRender = document.querySelector('.social__comments');//место куда отрисует склонированые дети темплейта
 
+	elementMyRender.innerHTML = '';
 	var container = document.createDocumentFragment();
 	for (var i = 0; i < data.length; i++) {
 		var comment = data[i];//елемент массива который выводит обект 
@@ -136,34 +136,28 @@ var enumerator = document.querySelector('.social__comment-count');
 enumerator.classList.add('visually-hidden');//прячет комментарии к изображению
 var batch = document.querySelector('.comments-loader');//вывод тега button
 batch.classList.add('visually-hidden');// прячет кнопку для загрузки новой порции комментариев
-// тест
-var previewAllImg = document.querySelectorAll('.picture__img');//массив маленьких 
+
+// при клике открытие фото 
 var bigPicture = document.querySelector('.big-picture');//вывод тега section
 
+function renderPreview(elem) {
+	var NUMBER_DIFFERENCE = 2;
+   
+	var parent = elem.parentNode;
+	var index = Array.prototype.indexOf.call(parent.children, elem) - NUMBER_DIFFERENCE;
+	openPopup(bigPicture);
 
-function getBigPhoto(smallFoto, bigFoto) {
+	renderBigPhoto(photos[index]);
+}
 
-	smallFoto.addEventListener('click', function (evt) {
+function pictureClickHandler(evt) {
+	var parent = evt.target.closest('.picture');
+	if (parent) {
 		evt.preventDefault();
-		openPopup(bigPicture);
-		renderBigPhoto(bigFoto); // bigFoto и evt.target выдают одинаковые фото
-	});
-	smallFoto.addEventListener('keydown', function (evt){
-		
-		if (evt.keyCode === ENTER_KEYCODE){
-			evt.preventDefault();
-			openPopup(bigPicture);
-			renderBigPhoto(bigFoto);
-		}
-
-	} );
+		renderPreview(parent);
+	}
 }
-
-
-//
-for (var k = 0; k < previewAllImg.length; k++) {//масив маленьких фото
-	getBigPhoto(previewAllImg[k], photos[k]);// массив маленьких и массив большых фото
-}
+elementRender.addEventListener('click', pictureClickHandler);
 
 //при нажатие на кнопку-хрестик закрыватся окно
 pictureCancelButton.addEventListener('click', function(){
@@ -175,9 +169,6 @@ var setupOpen = document.querySelector('.img-upload__label');//label - окно 
 var setup = document.querySelector('.img-upload__overlay');// Форма редактирования изображения
 var setupClose = document.querySelector('#upload-cancel');//Кнопка для закрытия формы редактирования изображения
 var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
-
-
 
 //открыть 
 function openPopup(date) {
@@ -187,7 +178,6 @@ function openPopup(date) {
 function closePopup(date) {
 	date.classList.add('hidden');
 }
-
 
 //при нажатие на кнопку открывается окно загрузки фото
 setupOpen.addEventListener('click', function(){
@@ -199,10 +189,16 @@ setupClose.addEventListener('click', function(){
 });
 //как оптимизировать?
 //при нажатие на кнопку ESC закрыватся окноx редактирования кода
-function pressEscSetup(evt){
-	if (evt.target !== textarea && evt.keyCode === ESC_KEYCODE){
-		closePopup(setup);
+function pressEscSetup(evt) { 
+	if (evt.keyCode !== ESC_KEYCODE) {
+		return;
 	}
+
+	if (evt.target.tagName.toLowerCase() === 'textarea' || evt.target.tagName.toLowerCase() === 'input') {
+		return;
+	}
+
+	closePopup(setup);
 }
 document.addEventListener('keydown', pressEscSetup);
 
@@ -213,7 +209,6 @@ function pressEscBigPicture(evt){
 	}
 }
 document.addEventListener('keydown', pressEscBigPicture);
-
 
 //2.1. Масштаб
 var lessValue = document.querySelector('.scale__control--smaller');//при нажатии на кнопку меньше
@@ -251,7 +246,6 @@ var onMoreClick = function() {
 moreValue.addEventListener('click', onMoreClick);
 
 //Наложение эффекта на изображение
-
 var FILTER_BLUR = 3;
 var FILTER_BRIGHTNESS = {
 	MIN: 1,
@@ -329,7 +323,6 @@ function changeFiter(evt){
 for(var i = 0; i < allFilters.length; i++){
 	allFilters[i].addEventListener('click', changeFiter);
 }
-
 
 // Ползунок
 pin.addEventListener('mousedown', function (evt) {
