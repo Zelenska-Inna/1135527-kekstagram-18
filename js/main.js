@@ -35,6 +35,7 @@ function getRandomComments() {
 			names: names[getRandomNumber(0, names.length - 1)],
 			avatar: 'img/avatar-' + randomIndexAvatar + '.svg', // генерит рандом автара
 		});
+
 	}
 
 	return randomComments;
@@ -43,7 +44,7 @@ function getRandomComments() {
 function getPhoto(index) {
 	return {
 		url: 'photos/' + (index + 1) + '.jpg',
-		description: 'fasdfs',
+		description: 'Автор',
 		likes: getRandomNumber(COUNT_LIKES.MIN, COUNT_LIKES.MAX),
 		comments: getRandomComments(index),
 	}; 
@@ -63,8 +64,7 @@ function getPhotos(length) {//создает и возвращает
 function renderBigPhoto(data) {
 
 	var bigPicture = document.querySelector('.big-picture');//вывод тега section
-	showElement(bigPicture);
-
+		
 	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
 	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
 	bigImg.src = data.url;
@@ -79,13 +79,14 @@ function renderBigPhoto(data) {
 	caption.innerHTML = data.description;//добавлено описание
 	renderComments(data.comments);
 }
-
+// Список комментариев под фотографией
 function renderComments(data){ //принимает или один или два обекта
-	// Список комментариев под фотографией
+
 	var callToMyTemplate = document.querySelector('#my__comment').content;//обращение к темплейту
 	var subjectTemplate = callToMyTemplate.querySelector('.social__comment');// вызвали его содержание/тег  li
 	var elementMyRender = document.querySelector('.social__comments');//место куда отрисует склонированые дети темплейта
 
+	elementMyRender.innerHTML = '';
 	var container = document.createDocumentFragment();
 	for (var i = 0; i < data.length; i++) {
 		var comment = data[i];//елемент массива который выводит обект 
@@ -109,6 +110,7 @@ function renderPhotos(data) {
 
 		var element = contentsTemplate.cloneNode(true); //клонирование тег а и дети 
 		var img = element.querySelector('img');
+		img.setAttribute('tabindex', 0);
 
 		element.href = actualPhoto.url; // где url это ключ обьекта 
 		img.src = actualPhoto.url;
@@ -129,31 +131,37 @@ var elementRender = document.querySelector('.pictures');//место куда о
 
 renderPhotos(photos);
 
+var pictureCancelButton = document.querySelector('#picture-cancel');
 var enumerator = document.querySelector('.social__comment-count');
 enumerator.classList.add('visually-hidden');//прячет комментарии к изображению
 var batch = document.querySelector('.comments-loader');//вывод тега button
 batch.classList.add('visually-hidden');// прячет кнопку для загрузки новой порции комментариев
 
-function onPreviewClick(evt){
-	evt.preventDefault();
+// при клике открытие фото 
+var bigPicture = document.querySelector('.big-picture');//вывод тега section
 
-	if (evt.target.className === 'picture__img') {// тег img
-		var imgSrc = evt.target.src.split('/');
-		var imgSrcLast= imgSrc.pop().split('.');
-		var imgSrcNumber = imgSrcLast[0] - 1;
-		renderBigPhoto(photos[imgSrcNumber]);
-	}
+function renderPreview(elem) {
+	var NUMBER_DIFFERENCE = 2;
+   
+	var parent = elem.parentNode;
+	var index = Array.prototype.indexOf.call(parent.children, elem) - NUMBER_DIFFERENCE;
+	openPopup(bigPicture);
+
+	renderBigPhoto(photos[index]);
 }
 
-elementRender.addEventListener('click', onPreviewClick);
-
+function pictureClickHandler(evt) {
+	var parent = evt.target.closest('.picture');
+	if (parent) {
+		evt.preventDefault();
+		renderPreview(parent);
+	}
+}
+elementRender.addEventListener('click', pictureClickHandler);
 
 //при нажатие на кнопку-хрестик закрыватся окно
-var pictureCancelButton = document.querySelector('#picture-cancel');
-
 pictureCancelButton.addEventListener('click', function(){
-	var bigPicture = document.querySelector('.big-picture');//вывод тега section
-	hideElement(bigPicture);
+	closePopup(bigPicture);
 });
 
 //задание 4. Обработка событий 
@@ -162,13 +170,15 @@ var setup = document.querySelector('.img-upload__overlay');// Форма ред�
 var setupClose = document.querySelector('#upload-cancel');//Кнопка для закрытия формы редактирования изображения
 var ESC_KEYCODE = 27;
 
+//открыть 
 function openPopup(date) {
 	date.classList.remove('hidden');
 }
-
+//закрыть
 function closePopup(date) {
 	date.classList.add('hidden');
 }
+
 //при нажатие на кнопку открывается окно загрузки фото
 setupOpen.addEventListener('click', function(){
 	openPopup(setup);
@@ -177,13 +187,28 @@ setupOpen.addEventListener('click', function(){
 setupClose.addEventListener('click', function(){
 	closePopup(setup);
 });
-//при нажатие на кнопку ESC закрыватся окно
-function pressEnter(evt){
-	if (evt.target !== textarea && evt.keyCode === ESC_KEYCODE){
-		closePopup(setup);
+//как оптимизировать?
+//при нажатие на кнопку ESC закрыватся окноx редактирования кода
+function pressEscSetup(evt) { 
+	if (evt.keyCode !== ESC_KEYCODE) {
+		return;
+	}
+
+	if (evt.target.tagName.toLowerCase() === 'textarea' || evt.target.tagName.toLowerCase() === 'input') {
+		return;
+	}
+
+	closePopup(setup);
+}
+document.addEventListener('keydown', pressEscSetup);
+
+//закритие отрисовки большого фото
+function pressEscBigPicture(evt){
+	if (evt.keyCode === ESC_KEYCODE){
+		closePopup(bigPicture);
 	}
 }
-document.addEventListener('keydown', pressEnter);
+document.addEventListener('keydown', pressEscBigPicture);
 
 //2.1. Масштаб
 var lessValue = document.querySelector('.scale__control--smaller');//при нажатии на кнопку меньше
@@ -221,7 +246,6 @@ var onMoreClick = function() {
 moreValue.addEventListener('click', onMoreClick);
 
 //Наложение эффекта на изображение
-
 var FILTER_BLUR = 3;
 var FILTER_BRIGHTNESS = {
 	MIN: 1,
@@ -265,18 +289,6 @@ function  getChangeFilter(point){
 	}
 
 }
-//удаление ползунка
-function hideElement(element) {
-	element.classList.add('hidden');
-}
-// добавление ползунка
-function showElement(element) {
-	if (element.classList.contains('hidden')) {
-		element.classList.remove('hidden');
-	} else if (element.classList.contains('visually-hidden')) {
-		element.classList.remove('visually-hidden');
-	}
-}
 
 //снимает фильт 
 function removeFiter() {
@@ -300,18 +312,17 @@ function changeFiter(evt){
 	var classFilter = classRandom[2]; // взяли тертью часть класа
 
 	if (classFilter == 'effects__preview--none'){
-		hideElement(slider);
+		closePopup(slider);
 		removeFiter();
 		return;
 	}
-	showElement(slider);
+	openPopup(slider);
 	addFiter(classFilter);
 }
 
 for(var i = 0; i < allFilters.length; i++){
 	allFilters[i].addEventListener('click', changeFiter);
 }
-
 
 // Ползунок
 pin.addEventListener('mousedown', function (evt) {
