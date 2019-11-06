@@ -30,7 +30,7 @@ window.main = (function () {
 	var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
 	var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
 	// var bigPicture = document.querySelector('.big-picture');//вывод тега section
-	
+
 	function getRandomNumber(min, max) {
 		return Math.floor(min + Math.random() * (max + 1 - min));
 	}
@@ -74,17 +74,17 @@ window.main = (function () {
 	function renderBigPhoto(data) {
 
 		window.bigPicture = document.querySelector('.big-picture');//вывод тега section
-		var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
+		var bigPictureImg = window.bigPicture.querySelector('.big-picture__img');//вывод тега div
 		var bigImg = bigPictureImg.querySelector('img');//вывод тега img
 		bigImg.src = data.url;
 
-		var bigPictureLikes = bigPicture.querySelector('.likes-count');//вывод тега span
+		var bigPictureLikes = window.bigPicture.querySelector('.likes-count');//вывод тега span
 		bigPictureLikes.textContent = data.likes;//вывод рандомных лайков
 
-		var bigPictureComments = bigPicture.querySelector('.comments-count');//вывод тега
+		var bigPictureComments = window.bigPicture.querySelector('.comments-count');//вывод тега
 		bigPictureComments.innerHTML = data.comments.length;
 
-		var caption = bigPicture.querySelector('.social__caption');//вывод тега р
+		var caption = window.bigPicture.querySelector('.social__caption');//вывод тега р
 		caption.innerHTML = data.description;//добавлено описание
 		window.util.openPopup(window.bigPicture);
 		renderComments(data.comments);
@@ -137,7 +137,7 @@ window.main = (function () {
 	renderPhotos(window.photos);
 
 	return {
-	renderBigPhoto: renderBigPhoto,
+		renderBigPhoto: renderBigPhoto,
 	};
 
 })();
