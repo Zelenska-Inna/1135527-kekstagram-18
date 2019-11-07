@@ -96,7 +96,7 @@
 			return;
 		}
 		//длина хештега не должна превышать 20 символов
-		if(oneTag.length > LENGTH_WORD){
+		if (oneTag.length > LENGTH_WORD) {
 			target.setCustomValidity('длина хештега превышает 20 символов');
 			return;
 		}
@@ -107,11 +107,11 @@
 	inputTags.addEventListener('input', onInputListener);
 
 	// коментарии
-	function onInputTextListener (evt) {
+	function onInputTextListener(evt) {
 		var target = evt.target;
 		var text = target.value;
-		
-		if (text.length > LENGTH_TEXT){
+
+		if (text.length > LENGTH_TEXT) {
 			textarea.setCustomValidity('длина коментария превышает 140 символов');
 			return;
 		}

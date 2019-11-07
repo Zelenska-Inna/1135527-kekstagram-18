@@ -19,13 +19,13 @@ window.preview = (function () {
 		'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 	];
 	var names = ['Dima', 'Max', 'Masha'];
+	// window.bigPicture = document.querySelector('.big-picture');//вывод тега section
 
 	var enumerator = document.querySelector('.social__comment-count');
 	var batch = document.querySelector('.comments-loader');//вывод тега button
 	var callToTemplate = document.querySelector('#picture').content;//вызвали тег темплейт
 	var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
 	var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
-	window.bigPicture = document.querySelector('.big-picture');//вывод тега section
 	var bigPictureImg = window.bigPicture.querySelector('.big-picture__img');//вывод тега div
 	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
 	var bigPictureLikes = window.bigPicture.querySelector('.likes-count');//вывод тега span
@@ -131,6 +131,8 @@ window.preview = (function () {
 
 	return {
 		renderBigPhoto: renderBigPhoto,
+		window.bigPicture = document.querySelector('.big-picture');//вывод тега section
+
 	};
 })();
 

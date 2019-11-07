@@ -53,20 +53,20 @@
 	//Наложение эффекта на изображение
 	slider.classList.add('hidden'); //!!по умолчанию слайдер скрыт
 
-	function  getChangeFilter(point) {
+	function getChangeFilter(point) {
 		var filter = previewImg.classList.value;// передается клас на который нажимаем
 
 		if (filter === FILTERS['none']) {
 			previewImg.style.filter = 'none';
-		} else if ( filter === FILTERS['chrome']) {
+		} else if (filter === FILTERS['chrome']) {
 			previewImg.style.filter = 'grayscale'+ '(' + point / 100 + ')';
-		} else if ( filter === FILTERS['sepia']) {
+		} else if (filter === FILTERS['sepia']) {
 			previewImg.style.filter = 'sepia' + '(' + point / 100 + ')';
-		} else if ( filter === FILTERS['marvin']) {
+		} else if (filter === FILTERS['marvin']) {
 			previewImg.style.filter = 'invert' + '(' + point + '%)';
-		} else if ( filter === FILTERS['phobos']) {
+		} else if (filter === FILTERS['phobos']) {
 			previewImg.style.filter = 'blur' + '(' + FILTER_BLUR * point / 100 + 'px)';
-		} else if ( filter === FILTERS['heat']) {
+		} else if (filter === FILTERS['heat']) {
 			previewImg.style.filter = 'brightness' + '(' + point / 100 * (FILTER_BRIGHTNESS.MAX - FILTER_BRIGHTNESS.MIN) + FILTER_BRIGHTNESS.MIN + ')';
 		}
 
@@ -105,7 +105,7 @@
 	}
 	sortOutFilters();
 	// Ползунок
-	pin.addEventListener('mousedown', function (evt) {
+	pin.addEventListener('mousedown', function(evt) {
 		var startCoords = evt.clientX;//точка нажатия 
 
 		function onMouseMove(moveEvt) {
@@ -113,7 +113,7 @@
 			startCoords = moveEvt.clientX;//новая точка координат 
 			var newLeft = pin.offsetLeft - shift;
 
-			if (newLeft < 0 ) {
+			if (newLeft < 0) {
 				newLeft = changeLine.offsetLeft + 'px';
 			} else if (newLeft > changeLine.getBoundingClientRect().width) {
 				newLeft = changeLine.getBoundingClientRect().width + 'px';
@@ -133,4 +133,5 @@
 		document.addEventListener('mousemove', onMouseMove);
 		document.addEventListener('mouseup', onMouseUp);
 	});
+
 })();
