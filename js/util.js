@@ -43,7 +43,7 @@ window.util = (function () {
 	});
 	//при нажатие на кнопку-хрестик закрыватся окно
 	pictureCancelButton.addEventListener('click', function() {
-		closePopup(bigPicture);//window.
+		closePopup(window.bigPicture);
 	});
 	
 	document.addEventListener('keydown', pressEscSetup);
