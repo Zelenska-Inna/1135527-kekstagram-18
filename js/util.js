@@ -29,8 +29,9 @@ window.util = (function () {
 	}
 	//закритие отрисовки большого фото
 	function pressEscBigPicture(evt) {
+
 		if (evt.keyCode === ESC_KEYCODE) {
-			closePopup(window.bigPicture);
+			closePopup(window.preview.bigPicture);
 		}
 	}
 	//при нажатие на кнопку открывается окно загрузки фото
@@ -43,15 +44,16 @@ window.util = (function () {
 	});
 	//при нажатие на кнопку-хрестик закрыватся окно
 	pictureCancelButton.addEventListener('click', function() {
-		closePopup(window.bigPicture);
+		closePopup(window.preview.bigPicture);
 	});
 	
 	document.addEventListener('keydown', pressEscSetup);
-	document.addEventListener('keydown', pressEscBigPicture);
+	// document.addEventListener('keydown', pressEscBigPicture);
 
 	return {
 		closePopup: closePopup,
 		openPopup: openPopup,
+		pressEscBigPicture: pressEscBigPicture,
 	};
 })();
 

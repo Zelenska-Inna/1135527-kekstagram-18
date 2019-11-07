@@ -20,17 +20,18 @@ window.preview = (function () {
 	];
 	var names = ['Dima', 'Max', 'Masha'];
 	// window.bigPicture = document.querySelector('.big-picture');//вывод тега section
+	var	bigPicture = document.querySelector('.big-picture');//вывод тега section
 
 	var enumerator = document.querySelector('.social__comment-count');
 	var batch = document.querySelector('.comments-loader');//вывод тега button
 	var callToTemplate = document.querySelector('#picture').content;//вызвали тег темплейт
 	var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
 	var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
-	var bigPictureImg = window.bigPicture.querySelector('.big-picture__img');//вывод тега div
+	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div//window.
 	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
-	var bigPictureLikes = window.bigPicture.querySelector('.likes-count');//вывод тега span
-	var bigPictureComments = window.bigPicture.querySelector('.comments-count');//вывод тега
-	var caption = window.bigPicture.querySelector('.social__caption');//вывод тега р
+	var bigPictureLikes = bigPicture.querySelector('.likes-count');//вывод тега span//window.
+	var bigPictureComments = bigPicture.querySelector('.comments-count');//вывод тега
+	var caption = bigPicture.querySelector('.social__caption');//вывод тега р//window.
 	var callToMyTemplate = document.querySelector('#my__comment').content;//обращение к темплейту
 	var subjectTemplate = callToMyTemplate.querySelector('.social__comment');// вызвали его содержание/тег  li
 	var elementMyRender = document.querySelector('.social__comments');//место куда отрисует склонированые дети темплейта
@@ -85,7 +86,7 @@ window.preview = (function () {
 		bigPictureComments.innerHTML = data.comments.length;
 		caption.innerHTML = data.description;//добавлено описание
 
-		window.util.openPopup(window.bigPicture);
+		window.util.openPopup(bigPicture);//window.
 		renderComments(data.comments);
 	}
 	// Список комментариев под фотографией
@@ -129,10 +130,17 @@ window.preview = (function () {
 	window.photos = getPhotos(MAX_PHOTOS_COUNT);// данные и счоздание дааних функция дейтвие
 	renderPhotos(window.photos);
 
+
+	function warrantyBigPicture(evt) {
+		window.util.pressEscBigPicture(evt);// вызываем проверку на наличие ESC closePreview
+	}
+
+	document.addEventListener('keydown', warrantyBigPicture);
+
+
 	return {
 		renderBigPhoto: renderBigPhoto,
-		window.bigPicture = document.querySelector('.big-picture');//вывод тега section
-
+		bigPicture: bigPicture,
 	};
 })();
 
