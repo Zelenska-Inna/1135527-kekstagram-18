@@ -19,7 +19,6 @@ window.preview = (function () {
 		'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 	];
 	var names = ['Dima', 'Max', 'Masha'];
-	// window.bigPicture = document.querySelector('.big-picture');//вывод тега section
 	var	bigPicture = document.querySelector('.big-picture');//вывод тега section
 
 	var enumerator = document.querySelector('.social__comment-count');

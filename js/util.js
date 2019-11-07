@@ -21,7 +21,8 @@ window.util = (function () {
 			
 		if (evt.keyCode !== ESC_KEYCODE) {
 			return;
-		} else if (evt.target.tagName.toLowerCase() === 'textarea' || evt.target.tagName.toLowerCase() === 'input') {
+		}
+		if (evt.target.tagName.toLowerCase() === 'textarea' || evt.target.tagName.toLowerCase() === 'input') {
 			return;
 		}
 
