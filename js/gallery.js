@@ -8,7 +8,7 @@
 		var parent = elem.parentNode;
 		var index = Array.prototype.indexOf.call(parent.children, elem) - NUMBER_DIFFERENCE;
 
-		window.preview.renderBigPhoto(window.photos[index]);//(window.photos[index]);
+		window.previe.renderBigPhoto(window.previe.photos[index]);
 	}
 
 	function pictureClickHandler(evt) {

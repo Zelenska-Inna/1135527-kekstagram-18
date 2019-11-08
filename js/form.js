@@ -30,7 +30,7 @@
 	// Масштаб
 	changePercent.setAttribute('value', 100 + '%');//!! по умолчанию изменено value 
 
-	function changeButton(evt) {
+	function scalingFoto(evt) {
 		var target = evt.target.className.split('--');
 		var splitUp = changePercent.getAttribute('value').split('%');
 		var number = Number(splitUp[0]);
@@ -48,12 +48,12 @@
 		}
 	}
 
-	scaleButton.addEventListener('click', changeButton);
+	scaleButton.addEventListener('click', scalingFoto);
 
 	//Наложение эффекта на изображение
 	slider.classList.add('hidden'); //!!по умолчанию слайдер скрыт
 
-	function getChangeFilter(point) {
+	function сhangeDepthFilter(point) {
 		var filter = previewImg.classList.value;// передается клас на который нажимаем
 
 		if (filter === FILTERS['none']) {
@@ -71,13 +71,14 @@
 		}
 
 	}
+
 	//снимает фильт 
-	function removeFiter() {
+	function removeFilter() {
 		previewImg.classList = '';
 		previewImg.style.filter = ''; // тоесть не будет фильтра
 	}
 	//добавляет фильтри
-	function addFiter(evt) {
+	function addFilter(evt) {
 		previewImg.classList = '';
 		previewImg.style.filter = '';
 		previewImg.classList.add(evt);
@@ -86,21 +87,21 @@
 		сolorSlider.style.width = pin.style.left; //по умолчанию цвет линии
 	}
 	//слушает все фыльтры
-	function changeFiter(evt) {
+	function changeFilter(evt) {
 		var classRandom = evt.target.className.split(' ');// розделили на масив
 		var classFilter = classRandom[2]; // взяли тертью часть класа
 		if (classFilter == 'effects__preview--none'){
 			window.util.closePopup(slider);
-			removeFiter();
+			removeFilter();
 			return;
 		}
 		window.util.openPopup(slider);
-		addFiter(classFilter);
+		addFilter(classFilter);
 	}
 
 	function sortOutFilters() {
 		for(var i = 0; i < allFilters.length; i++){
-			allFilters[i].addEventListener('click', changeFiter);
+			allFilters[i].addEventListener('click', changeFilter);
 		}
 	}
 	sortOutFilters();
@@ -122,7 +123,7 @@
 			var point = Math.floor(newLeft * 100 / changeLine.offsetWidth);
 			сolorSlider.style.width = point + '%';
 				
-			getChangeFilter(point);
+			сhangeDepthFilter(point);
 		}
 
 		function onMouseUp(upEvt) {

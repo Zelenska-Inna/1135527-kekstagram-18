@@ -26,11 +26,11 @@ window.preview = (function () {
 	var callToTemplate = document.querySelector('#picture').content;//вызвали тег темплейт
 	var contentsTemplate = callToTemplate.querySelector('.picture');// вызвали его содержание/тег а 
 	var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
-	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div//window.
+	var bigPictureImg = bigPicture.querySelector('.big-picture__img');//вывод тега div
 	var bigImg = bigPictureImg.querySelector('img');//вывод тега img
-	var bigPictureLikes = bigPicture.querySelector('.likes-count');//вывод тега span//window.
+	var bigPictureLikes = bigPicture.querySelector('.likes-count');//вывод тега span
 	var bigPictureComments = bigPicture.querySelector('.comments-count');//вывод тега
-	var caption = bigPicture.querySelector('.social__caption');//вывод тега р//window.
+	var caption = bigPicture.querySelector('.social__caption');//вывод тега р
 	var callToMyTemplate = document.querySelector('#my__comment').content;//обращение к темплейту
 	var subjectTemplate = callToMyTemplate.querySelector('.social__comment');// вызвали его содержание/тег  li
 	var elementMyRender = document.querySelector('.social__comments');//место куда отрисует склонированые дети темплейта
@@ -85,7 +85,7 @@ window.preview = (function () {
 		bigPictureComments.innerHTML = data.comments.length;
 		caption.innerHTML = data.description;//добавлено описание
 
-		window.util.openPopup(bigPicture);//window.
+		window.util.openPopup(bigPicture);
 		renderComments(data.comments);
 	}
 	// Список комментариев под фотографией
@@ -126,8 +126,8 @@ window.preview = (function () {
 		elementRender.appendChild(container); // добавление в DOM
 	}
 
-	window.photos = getPhotos(MAX_PHOTOS_COUNT);// данные и счоздание дааних функция дейтвие
-	renderPhotos(window.photos);
+	var photos = getPhotos(MAX_PHOTOS_COUNT);// данные и счоздание дааних функция дейтвие 
+	renderPhotos(photos);
 
 
 	function warrantyBigPicture(evt) {
@@ -140,6 +140,7 @@ window.preview = (function () {
 	return {
 		renderBigPhoto: renderBigPhoto,
 		bigPicture: bigPicture,
+		photos: photos,
 	};
 })();
 
