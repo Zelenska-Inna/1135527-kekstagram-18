@@ -135,10 +135,25 @@ window.preview = (function () {
 
 	document.addEventListener('keydown', warrantyBigPicture);
  
+	function onSuccess(data) {
+		renderPhotos(data);
+	}
+
+	function renderError(message) {
+		var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+		var main = document.querySelector('main');
+		var errorNode = errorTemplate.cloneNode(true);
+		errorNode.querySelector('.error__title').innerHTML = 'Ошибка соединения с сервером <br>' + message;
+		main.appendChild(errorNode);
+	}
+
+ 
 	return {
 		renderBigPhoto: renderBigPhoto,
 		bigPicture: bigPicture,
 		photos: photos,
+		onSuccess: onSuccess,
+		renderError: renderError,
 	};
 })();
 
