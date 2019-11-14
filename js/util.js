@@ -3,9 +3,7 @@
 window.util = (function () {
 	//открытие и закрытие кнопок
 	var ESC_KEYCODE = 27;
-	var setupOpen = document.querySelector('.img-upload__label');//label - окно вызова загрузки фото #upload-file
 	var setup = document.querySelector('.img-upload__overlay');// Форма редактирования изображения
-	var setupClose = document.querySelector('#upload-cancel');//Кнопка для закрытия формы редактирования изображения
 	var pictureCancelButton = document.querySelector('#picture-cancel');
 
 	//открыть 
@@ -35,26 +33,29 @@ window.util = (function () {
 			closePopup(window.preview.bigPicture);
 		}
 	}
-	//при нажатие на кнопку открывается окно загрузки фото
-	setupOpen.addEventListener('click', function() {
-		openPopup(setup);
-	});
-	//при нажатие на кнопку-хрестик закрыватся окно
-	setupClose.addEventListener('click', function() {
-		closePopup(setup);
-	});
+
+	function pressEscButton(evt, action) {
+
+		if (evt.keyCode === ESC_KEYCODE) {
+			action();
+		}
+	}
+	
 	//при нажатие на кнопку-хрестик закрыватся окно
 	pictureCancelButton.addEventListener('click', function() {
 		closePopup(window.preview.bigPicture);
 	});
 	
 	document.addEventListener('keydown', pressEscSetup);
-	// document.addEventListener('keydown', pressEscBigPicture);
+	document.addEventListener('keydown', pressEscBigPicture);
 
 	return {
+		setup: setup,
 		closePopup: closePopup,
 		openPopup: openPopup,
 		pressEscBigPicture: pressEscBigPicture,
+		pressEscSetup: pressEscSetup,
+		pressEscButton: pressEscButton,
 	};
 })();
 

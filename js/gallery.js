@@ -20,4 +20,7 @@
 		}
 	}
 	elementRender.addEventListener('click', pictureClickHandler);
+	
+	window.backend.load('https://js.dump.academy/kekstagram/data', window.preview.onSuccess, window.preview.renderError);
+
 })();

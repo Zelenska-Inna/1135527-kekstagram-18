@@ -1,13 +1,21 @@
 
 'use strict';
 
-(function () {
+window.validation = (function () {
 	//ВАЛИДАЦИЯ
 	var COUNT_WORDS = 5;
 	var LENGTH_WORD = 20;
 	var LENGTH_TEXT = 140;
 	var inputTags = document.querySelector('.text__hashtags');//достучались до поля хештегов input
 	var textarea = document.querySelector('.text__description');//достучались до поля коментариев
+
+	function changeBorder(element) {
+		element.style.borderColor = 'red';
+	}
+		
+	function returnBorder(element) {
+		element.style.borderColor = '';
+	}
 	//хештеги
 	function checkForHashSymbol(str) {
 		if (str != '#') {
@@ -58,6 +66,7 @@
 			//количество тегов до 5
 			if (oneTag === '') {
 				target.setCustomValidity('');
+				returnBorder(inputTags);
 				return ;
 			}
 			allHashLength ++;
@@ -66,6 +75,7 @@
 
 			if (errorText && errorText.length > 0) {
 				target.setCustomValidity(errorText);
+				changeBorder(inputTags);
 				return;
 			}
 			// в одном хешьтега не больше одной решотки;
@@ -73,6 +83,7 @@
 
 			if (errorText && errorText.length > 0) {
 				target.setCustomValidity(errorText);
+				changeBorder(inputTags);
 				return;
 			}
 			//хеш-тег не может состоять только из одной решётки
@@ -80,6 +91,7 @@
 
 			if (errorText && errorText.length > 0) {
 				target.setCustomValidity(errorText);
+				changeBorder(inputTags);
 				return;
 			}
 			//одинаковые хештеги не допускаются
@@ -87,21 +99,25 @@
 
 			if (errorText && errorText.length > 0) {
 				target.setCustomValidity(errorText);
+				changeBorder(inputTags);
 				return;
 			}
 		} 
 		//нельзя указать больше 5-ти хэш-тегов
 		if (allHashLength > COUNT_WORDS) {
 			target.setCustomValidity('нельзя указать больше 5-ти хэш-тегов');
+			changeBorder(inputTags);
 			return;
 		}
 		//длина хештега не должна превышать 20 символов
 		if (oneTag.length > LENGTH_WORD) {
 			target.setCustomValidity('длина хештега превышает 20 символов');
+			changeBorder(inputTags);
 			return;
 		}
-
+		
 		target.setCustomValidity('');
+		returnBorder(inputTags);
 	}
 
 	inputTags.addEventListener('input', onInputListener);
@@ -113,9 +129,15 @@
 
 		if (text.length > LENGTH_TEXT) {
 			textarea.setCustomValidity('длина коментария превышает 140 символов');
+			changeBorder(textarea);
 			return;
 		}
+		returnBorder(textarea);
 		target.setCustomValidity('');
 	}
 	textarea.addEventListener('input', onInputTextListener);
+	return {
+		inputTags: inputTags,
+		textarea: textarea,
+	};
 })();

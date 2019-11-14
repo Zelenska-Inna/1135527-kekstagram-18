@@ -26,9 +26,13 @@
 	var pin = slider.querySelector('.effect-level__pin');// Кнопка изменения глубины эффекта фотографии
 	var changeLine = document.querySelector('.effect-level__line');// линия по которой бегает pin
 	var сolorSlider = document.querySelector('.effect-level__depth');
+	var setupOpen = document.querySelector('.img-upload__label');//label - окно вызова загрузки фото #upload-file
+	var setupClose = document.querySelector('#upload-cancel');//Кнопка для закрытия формы редактирования изображения
+	var form = document.querySelector('.img-upload__form');
+
 
 	// Масштаб
-	changePercent.setAttribute('value', 100 + '%');//!! по умолчанию изменено value 
+	changePercent.setAttribute('value', 100 + '%');//!! по умолчанию картинка в полном размере
 
 	function scalingFoto(evt) {
 		var target = evt.target.className.split('--');
@@ -51,7 +55,6 @@
 	scaleButton.addEventListener('click', scalingFoto);
 
 	//Наложение эффекта на изображение
-	slider.classList.add('hidden'); //!!по умолчанию слайдер скрыт
 
 	function сhangeDepthFilter(point) {
 		var filter = previewImg.classList.value;// передается клас на который нажимаем
@@ -75,7 +78,14 @@
 	//снимает фильт 
 	function removeFilter() {
 		previewImg.classList = '';
-		previewImg.style.filter = ''; // тоесть не будет фильтра
+		previewImg.style = '';
+		changePercent.setAttribute('value', 100 + '%');// значение масштаба(в процентах)
+	}
+
+	//cнимает комети и хештеги
+	function removeText() {
+		window.validation.textarea.value = '';
+		window.validation.inputTags.value = '';
 	}
 	//добавляет фильтри
 	function addFilter(evt) {
@@ -105,6 +115,19 @@
 		}
 	}
 	sortOutFilters();
+
+	//при нажатие на кнопку открывается окно загрузки фото
+	setupOpen.addEventListener('click', function() {
+		window.util.closePopup(slider);
+		window.util.openPopup(window.util.setup);
+	});
+
+	//при нажатие на кнопку-хрестик закрыватся окно
+	setupClose.addEventListener('click', function() {
+		removeText();
+		removeFilter();
+		window.util.closePopup(window.util.setup);		
+	});
 	// Ползунок
 	pin.addEventListener('mousedown', function(evt) {
 		var startCoords = evt.clientX;//точка нажатия 
@@ -135,4 +158,56 @@
 		document.addEventListener('mouseup', onMouseUp);
 	});
 
+	//СООБЩЕНИЕ
+	function renderMessage(id, message) {
+		var style = id.replace('#', '.');
+
+
+		var template = document.querySelector(id).content.querySelector(style);
+		var node = template.cloneNode(true);
+		var main = document.querySelector('main');
+		var button = node.querySelector(style + '__button');
+
+		function messageEscPressHandler(evt) {
+			window.util.pressEscButton(evt, removeMessage);
+		}
+
+		function removeMessage() {
+			main.removeChild(node);
+			document.removeEventListener('keydown', messageEscPressHandler);
+		}
+
+		button.addEventListener('click', removeMessage);
+		document.addEventListener('keydown', messageEscPressHandler);
+
+		node.addEventListener('click', function (evt) {
+			if (evt.target === node) {
+				removeMessage();
+			}
+		});
+
+		if (message) {
+			var nodeInner = node.querySelector(style + '__inner');
+			var p = document.createElement('p');
+			p.textContent = message;
+			nodeInner.appendChild(p);
+		}
+		main.appendChild(node);
+	}
+
+	function onSuccess() {
+		window.util.closePopup(window.util.setup);
+		renderMessage('#success');
+	}
+
+	function onError(message) {
+		window.util.closePopup(window.util.setup);// closeEditForm
+		renderMessage('#error', message);
+	}
+
+	form.addEventListener('submit', function (evt) {
+		evt.preventDefault();
+
+		window.backend.upload('https://js.dump.academy/kekstagram', new FormData(form), onSuccess, onError);
+	});
 })();
