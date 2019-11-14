@@ -129,14 +129,12 @@ window.preview = (function () {
 	var photos = getPhotos(MAX_PHOTOS_COUNT);// данные и счоздание дааних функция дейтвие 
 	renderPhotos(photos);
 
-
 	function warrantyBigPicture(evt) {
 		window.util.pressEscBigPicture(evt);// вызываем проверку на наличие ESC 
 	}
 
 	document.addEventListener('keydown', warrantyBigPicture);
-
-
+ 
 	return {
 		renderBigPhoto: renderBigPhoto,
 		bigPicture: bigPicture,
