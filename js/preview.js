@@ -126,7 +126,7 @@ window.preview = (function () {
 		elementRender.appendChild(container); // добавление в DOM
 	}
 
-	var photos = getPhotos(MAX_PHOTOS_COUNT);// данные и счоздание дааних функция дейтвие 
+	var photos = getPhotos(MAX_PHOTOS_COUNT);// данные и создание дааних функция дейтвие 
 	renderPhotos(photos);
 
 	function warrantyBigPicture(evt) {
@@ -134,11 +134,26 @@ window.preview = (function () {
 	}
 
 	document.addEventListener('keydown', warrantyBigPicture);
+
+  function onSuccess(data) {
+    renderPhotos(data);
+  }
+
+  function renderError(message) {
+    var errorTemplate = document.querySelector('#error').content.querySelector('.error');
+    var main = document.querySelector('main');
+    var errorNode = errorTemplate.cloneNode(true);
+    errorNode.querySelector('.error__title').innerHTML = 'Ошибка соединения с сервером <br>' + message;
+    main.appendChild(errorNode);
+  }
+
  
 	return {
 		renderBigPhoto: renderBigPhoto,
 		bigPicture: bigPicture,
 		photos: photos,
+		onSuccess: onSuccess,
+		renderError: renderError,
 	};
 })();
 
