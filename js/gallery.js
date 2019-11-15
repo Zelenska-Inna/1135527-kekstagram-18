@@ -3,12 +3,13 @@
 (function () {
 	var NUMBER_DIFFERENCE = 2;
 	var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
+	
 	//при клике открытие фото 
 	function renderPreview(elem) {
 		var parent = elem.parentNode;
 		var index = Array.prototype.indexOf.call(parent.children, elem) - NUMBER_DIFFERENCE;
 
-		window.preview.renderBigPhoto(window.preview.photos[index]);
+		window.preview.renderBigPhoto(window.xhrPhotos[index]);//window.xhrPhotos[index]
 	}
 
 	function pictureClickHandler(evt) {
@@ -21,6 +22,6 @@
 	}
 	elementRender.addEventListener('click', pictureClickHandler);
 	
-	window.backend.load('https://js.dump.academy/kekstagram/data', window.preview.onSuccess, window.preview.renderError);
+	window.backend.load('https://js.dump.academy/kekstagram/data', window.preview.renderPhotos, window.preview.renderError);
 
 })();

@@ -52,10 +52,7 @@
 		}
 	}
 
-	scaleButton.addEventListener('click', scalingFoto);
-
 	//Наложение эффекта на изображение
-
 	function сhangeDepthFilter(point) {
 		var filter = previewImg.classList.value;// передается клас на который нажимаем
 
@@ -114,7 +111,11 @@
 			allFilters[i].addEventListener('click', changeFilter);
 		}
 	}
+
 	sortOutFilters();
+
+	//при нажатие на клопку меняется масштаб фото
+	scaleButton.addEventListener('click', scalingFoto);
 
 	//при нажатие на кнопку открывается окно загрузки фото
 	setupOpen.addEventListener('click', function() {
@@ -128,6 +129,7 @@
 		removeFilter();
 		window.util.closePopup(window.util.setup);		
 	});
+	
 	// Ползунок
 	pin.addEventListener('mousedown', function(evt) {
 		var startCoords = evt.clientX;//точка нажатия 
@@ -161,15 +163,13 @@
 	//СООБЩЕНИЕ
 	function renderMessage(id, message) {
 		var style = id.replace('#', '.');
-
-
 		var template = document.querySelector(id).content.querySelector(style);
 		var node = template.cloneNode(true);
 		var main = document.querySelector('main');
 		var button = node.querySelector(style + '__button');
 
 		function messageEscPressHandler(evt) {
-			window.util.pressEscButton(evt, removeMessage);
+			window.util.pressEsc(evt, removeMessage);
 		}
 
 		function removeMessage() {
