@@ -2,7 +2,8 @@
 
 window.preview = (function () {
 
-
+	var MAX_LENGTH = 10;
+	var MAX_NUMBER_COMMENTS = 5; 
 	var	bigPicture = document.querySelector('.big-picture');//вывод тега section
 	var batch = document.querySelector('.comments-loader');//вывод тега button
 	var callToTemplate = document.querySelector('#picture').content;//вызвали тег темплейт
@@ -32,7 +33,7 @@ window.preview = (function () {
 		caption.innerHTML = data.description;//добавлено описание
 
 		window.util.openPopup(bigPicture);
-		renderComments(data, commentsCount, 5);
+		renderComments(data, commentsCount, MAX_NUMBER_COMMENTS);
 	}
 	// Список комментариев под фотографией
 	function renderComments(data, startCount, endCount) { //принимает масив 
@@ -61,7 +62,7 @@ window.preview = (function () {
 	}
 
 	batch.addEventListener('click', function () {
-		var endCount = commentsCount + 5;
+		var endCount = commentsCount + MAX_NUMBER_COMMENTS;
 		renderComments(currentPhoto, commentsCount, endCount);
 	});
 
@@ -142,10 +143,10 @@ window.preview = (function () {
 		var arrNew = [];
 		var index;
 
-		for (var i = 0; i < 20; i++) {
+		for (var i = 0; i < window.xhrPhotos.length; i++) {
 			index =  Math.floor(Math.random() * window.xhrPhotos.length);
 
-			if (arrNew.indexOf(window.xhrPhotos.slice()[index]) == -1 && arrNew.length !=10){
+			if (arrNew.indexOf(window.xhrPhotos.slice()[index]) == -1 && arrNew.length != MAX_LENGTH){
 				arrNew.push(window.xhrPhotos.slice()[index]);
 			}
 		}
