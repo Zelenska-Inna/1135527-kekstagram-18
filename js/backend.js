@@ -4,7 +4,8 @@
 window.backend = (function () {
 	var XHR_SUCCESS_STATUS = 200;
 
-	function load(url, renderPhotos, onError) {//onSuccess
+	function load(url, onSuccess, onError) {//onSuccess
+		
 		var xhr = new XMLHttpRequest();
 		xhr.responseType = 'json';
 
@@ -12,7 +13,7 @@ window.backend = (function () {
 
 		xhr.addEventListener('load', function () {
 			if (xhr.status === XHR_SUCCESS_STATUS) {
-				window.preview.renderPhotos(xhr.response);//отримует по умолчанию
+				onSuccess(xhr.response);//отримует по умолчанию чи правильно window.xhrPhotos[index]
 			} else {
 				onError('Статус ответа ' + xhr.status + xhr.statusText);
 			}
