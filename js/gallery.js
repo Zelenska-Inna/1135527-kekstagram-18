@@ -2,8 +2,8 @@
 
 (function () {
 	var NUMBER_DIFFERENCE = 2;
-	var elementRender = document.querySelector('.pictures');//место куда отрисует склонированые дети темплейта
-	
+	var elementRender = document.querySelector('.pictures');
+
 	//при клике открытие фото 
 	function renderPreview(elem) {
 		var parent = elem.parentNode;
@@ -23,9 +23,9 @@
 	elementRender.addEventListener('click', pictureClickHandler);
 
 	function load(data) {
-		window.xhrPhotos = data;//  а это вставлять ?
-		window.preview.showFilters();// логика оттображение фильтров
+		window.xhrPhotos = data;
 		window.preview.renderPhotos(data);
+		window.filters.showFilters();
 	}
 
 	window.backend.load('https://js.dump.academy/kekstagram/data', load, window.preview.renderError);
