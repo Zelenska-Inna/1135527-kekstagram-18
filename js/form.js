@@ -1,12 +1,11 @@
 'use strict';
 
 (function () {
-	//константы
-	var VARIABLE = 25;//величина шага
+	var VARIABLE = 25;
 	var MAX_POINT = 75;
-	var INTEREST_RATE = 100;
+	var MAX_RATE = 100;
 	var FILTER_BLUR = 3;
-	var FILTER_BRIGHTNESS = {
+	var FilterBrightness = { 
 		MIN: 1,
 		MAX: 3,
 	};
@@ -19,34 +18,31 @@
 		'heat': 'effects__preview--heat'
 	}; 
 	var scaleButton = document.querySelector('.img-upload__scale');
-	var changePercent = document.querySelector('.scale__control--value');//окно показа Value
-	var allFilters = document.querySelectorAll('.effects__preview');//все фильтры
-	var previewImg = document.querySelector('.img-upload__preview').querySelector('img');//Предварительный просмотр фотографии
-	var slider = document.querySelector('.img-upload__effect-level');// слайдер 
-	var pin = slider.querySelector('.effect-level__pin');// Кнопка изменения глубины эффекта фотографии
-	var changeLine = document.querySelector('.effect-level__line');// линия по которой бегает pin
+	var changePercent = document.querySelector('.scale__control--value');
+	var allFilters = document.querySelectorAll('.effects__preview');
+	var previewImg = document.querySelector('.img-upload__preview').querySelector('img');
+	var slider = document.querySelector('.img-upload__effect-level');
+	var pin = slider.querySelector('.effect-level__pin');
+	var changeLine = document.querySelector('.effect-level__line');
 	var сolorSlider = document.querySelector('.effect-level__depth');
-	var setupOpen = document.querySelector('.img-upload__label');//label - окно вызова загрузки фото #upload-file
-	var setupClose = document.querySelector('#upload-cancel');//Кнопка для закрытия формы редактирования изображения
+	var setupOpen = document.querySelector('.img-upload__label');
+	var setupClose = document.querySelector('#upload-cancel');
 	var form = document.querySelector('.img-upload__form');
 
-
 	// Масштаб
-	changePercent.setAttribute('value', 100 + '%');//!! по умолчанию картинка в полном размере
-
-	function scalingFoto(evt) {
+	function scalingFotoHandler(evt) {
 		var target = evt.target.className.split('--');
 		var splitUp = changePercent.getAttribute('value').split('%');
 		var number = Number(splitUp[0]);
 		var change;
 
-		if (number > VARIABLE && target[1] == 'smaller') {
+		if (number > VARIABLE && target[1] === 'smaller') {
 			change = number - VARIABLE;
-			previewImg.style.transform = 'scale(' + change / INTEREST_RATE + ')';
+			previewImg.style.transform = 'scale(' + change / MAX_RATE + ')';
 			changePercent.setAttribute('value',change + '%');
-		} else if (number <= MAX_POINT && target[1] == 'bigger') {
+		} else if (number <= MAX_POINT && target[1] === 'bigger') {
 			change = number + VARIABLE;
-			previewImg.style.transform = 'scale(' + change / INTEREST_RATE + ')';
+			previewImg.style.transform = 'scale(' + change / MAX_RATE + ')';
 			changePercent.setAttribute('value', change + '%');//изменение самого класа
 			return;
 		}
@@ -59,24 +55,27 @@
 		if (filter === FILTERS['none']) {
 			previewImg.style.filter = 'none';
 		} else if (filter === FILTERS['chrome']) {
-			previewImg.style.filter = 'grayscale'+ '(' + point / 100 + ')';
+			previewImg.style.filter = 'grayscale'+ '(' + point / MAX_RATE + ')';
 		} else if (filter === FILTERS['sepia']) {
-			previewImg.style.filter = 'sepia' + '(' + point / 100 + ')';
+			previewImg.style.filter = 'sepia' + '(' + point / MAX_RATE + ')';
 		} else if (filter === FILTERS['marvin']) {
 			previewImg.style.filter = 'invert' + '(' + point + '%)';
 		} else if (filter === FILTERS['phobos']) {
-			previewImg.style.filter = 'blur' + '(' + FILTER_BLUR * point / 100 + 'px)';
+			previewImg.style.filter = 'blur' + '(' + FILTER_BLUR * point / MAX_RATE + 'px)';
 		} else if (filter === FILTERS['heat']) {
-			previewImg.style.filter = 'brightness' + '(' + point / 100 * (FILTER_BRIGHTNESS.MAX - FILTER_BRIGHTNESS.MIN) + FILTER_BRIGHTNESS.MIN + ')';
+			previewImg.style.filter = 'brightness' + '(' + point / MAX_RATE * (FilterBrightness.MAX - FilterBrightness.MIN) + FilterBrightness.MIN + ')';
 		}
 
+	}
+	// по умолчанию картинка в полном размере
+	function  defaultSizeImg() {
+		changePercent.setAttribute('value', MAX_RATE + '%');
 	}
 
 	//снимает фильт 
 	function removeFilter() {
 		previewImg.classList = '';
 		previewImg.style = '';
-		changePercent.setAttribute('value', 100 + '%');// значение масштаба(в процентах)
 	}
 
 	//cнимает комети и хештеги
@@ -90,14 +89,14 @@
 		previewImg.style.filter = '';
 		previewImg.classList.add(evt);
 		// по умолчанию
-		pin.style.left = 100 + '%';//по умолчанию максимальное значение
+		pin.style.left = MAX_RATE + '%';//по умолчанию максимальное значение
 		сolorSlider.style.width = pin.style.left; //по умолчанию цвет линии
 	}
 	//слушает все фыльтры
-	function changeFilter(evt) {
-		var classRandom = evt.target.className.split(' ');// розделили на масив
-		var classFilter = classRandom[2]; // взяли тертью часть класа
-		if (classFilter == 'effects__preview--none'){
+	function changeFilterHandler(evt) {
+		var classRandom = evt.target.className.split(' ');
+		var classFilter = classRandom[2]; 
+		if (classFilter === 'effects__preview--none'){
 			window.util.closePopup(slider);
 			removeFilter();
 			return;
@@ -108,25 +107,26 @@
 
 	function sortOutFilters() {
 		for(var i = 0; i < allFilters.length; i++){
-			allFilters[i].addEventListener('click', changeFilter);
+			allFilters[i].addEventListener('click', changeFilterHandler);
 		}
 	}
 
 	sortOutFilters();
 
 	//при нажатие на клопку меняется масштаб фото
-	scaleButton.addEventListener('click', scalingFoto);
+	scaleButton.addEventListener('click', scalingFotoHandler);
 
 	//при нажатие на кнопку открывается окно загрузки фото
 	setupOpen.addEventListener('click', function() {
+		removeText();
+		removeFilter();
 		window.util.closePopup(slider);
 		window.util.openPopup(window.util.setup);
+		defaultSizeImg();
 	});
 
 	//при нажатие на кнопку-хрестик закрыватся окно
 	setupClose.addEventListener('click', function() {
-		removeText();
-		removeFilter();
 		window.util.closePopup(window.util.setup);		
 	});
 	
@@ -145,7 +145,7 @@
 				newLeft = changeLine.getBoundingClientRect().width + 'px';
 			}
 			pin.style.left = newLeft + 'px';
-			var point = Math.floor(newLeft * 100 / changeLine.offsetWidth);
+			var point = Math.floor(newLeft * MAX_RATE / changeLine.offsetWidth);
 			сolorSlider.style.width = point + '%';
 				
 			сhangeDepthFilter(point);
@@ -169,20 +169,20 @@
 		var button = node.querySelector(style + '__button');
 
 		function messageEscPressHandler(evt) {
-			window.util.pressEsc(evt, removeMessage);
+			window.util.pressEsc(evt, removeMessageHandler);
 		}
 
-		function removeMessage() {
+		function removeMessageHandler() {
 			main.removeChild(node);
 			document.removeEventListener('keydown', messageEscPressHandler);
 		}
 
-		button.addEventListener('click', removeMessage);
+		button.addEventListener('click', removeMessageHandler);
 		document.addEventListener('keydown', messageEscPressHandler);
 
 		node.addEventListener('click', function (evt) {
 			if (evt.target === node) {
-				removeMessage();
+				removeMessageHandler();
 			}
 		});
 
@@ -196,12 +196,16 @@
 	}
 
 	function onSuccess() {
+		removeText();
+		removeFilter();
 		window.util.closePopup(window.util.setup);
 		renderMessage('#success');
 	}
 
 	function onError(message) {
-		window.util.closePopup(window.util.setup);// closeEditForm
+		removeText();
+		removeFilter();
+		window.util.closePopup(window.util.setup);
 		renderMessage('#error', message);
 	}
 

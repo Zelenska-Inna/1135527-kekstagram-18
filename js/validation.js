@@ -1,13 +1,11 @@
-
 'use strict';
 
 window.validation = (function () {
-	//ВАЛИДАЦИЯ
 	var COUNT_WORDS = 5;
 	var LENGTH_WORD = 20;
 	var LENGTH_TEXT = 140;
-	var inputTags = document.querySelector('.text__hashtags');//достучались до поля хештегов input
-	var textarea = document.querySelector('.text__description');//достучались до поля коментариев
+	var inputTags = document.querySelector('.text__hashtags');//поле хештегов 
+	var textarea = document.querySelector('.text__description');//поле коментариев
 
 	function changeBorder(element) {
 		element.style.borderColor = 'red';
@@ -18,7 +16,7 @@ window.validation = (function () {
 	}
 	//хештеги
 	function checkForHashSymbol(str) {
-		if (str != '#') {
+		if (str !== '#') {
 			return 'хештег должен начинатся с #';
 		}
 	}
@@ -48,7 +46,7 @@ window.validation = (function () {
 		
 		for(var i = 0; i < list.length; i++){
 			for(var k = 0; k < list.length; k++){
-				if(list[i] === list[k] && i != k){
+				if(list[i] === list[k] && i !== k){
 					return 'одинаковые хештеги не допускаются';
 				}
 			}
