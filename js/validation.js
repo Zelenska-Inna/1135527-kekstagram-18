@@ -4,8 +4,8 @@ window.validation = (function () {
 	var COUNT_WORDS = 5;
 	var LENGTH_WORD = 20;
 	var LENGTH_TEXT = 140;
-	var inputTags = document.querySelector('.text__hashtags');//поле хештегов 
-	var textarea = document.querySelector('.text__description');//поле коментариев
+	var inputTags = document.querySelector('.text__hashtags');
+	var textarea = document.querySelector('.text__description');
 
 	function changeBorder(element) {
 		element.style.borderColor = 'red';

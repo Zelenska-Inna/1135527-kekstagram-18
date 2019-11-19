@@ -33,8 +33,8 @@ window.preview = (function () {
 	}
 
 	//Список комментариев под фотографией
-	function renderComments(data, startCount, endCount) { //принимает масив 
-		var wrapper = document.createDocumentFragment();//wrapper
+	function renderComments(data, startCount, endCount) {
+		var wrapper = document.createDocumentFragment();
 		var commentsCountRendered = document.querySelector('.comments__count-start');
 
 		for (var i = startCount; i < endCount && data.comments.length; i++) {
