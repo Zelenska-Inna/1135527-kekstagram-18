@@ -32,9 +32,7 @@ window.util = (function () {
 			action();
 		}
 	}
-
-	document.addEventListener('keydown', pressEscSetupHandler);
-
+	
 	return {
 		setup: setup,
 		closePopup: closePopup,

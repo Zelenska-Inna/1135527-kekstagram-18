@@ -38,17 +38,17 @@ window.filters = (function () {
 	}
 
 	function activRandomFilters(evt) {
-		var arrNew = [];
+		var photosSorted = [];
 		var index;
 
 		for (var i = 0; i < window.xhrPhotos.length; i++) {
 			index =  Math.floor(Math.random() * window.xhrPhotos.length);
 
-			if (arrNew.indexOf(window.xhrPhotos.slice()[index]) === -1 && arrNew.length !== MAX_LENGTH){
-				arrNew.push(window.xhrPhotos.slice()[index]);
+			if (photosSorted.indexOf(window.xhrPhotos.slice()[index]) === -1 && photosSorted.length !== MAX_LENGTH){
+				photosSorted.push(window.xhrPhotos.slice()[index]);
 			}
 		}
-		changeFilter(evt, arrNew);
+		changeFilter(evt, photosSorted);
 	}
 
 	function activDiscussedFilters(evt) {
@@ -61,19 +61,19 @@ window.filters = (function () {
 
 	imgFilters.addEventListener('click', function(evt) {
 		if ( evt.target === popular) {
-			DebounceActivPopularFilters(evt);
+			debounceActivPopularFilters(evt);
 		}
 		if (evt.target === random) {
-			DebounceActivRandomFilters(evt);
+			debounceActivRandomFilters(evt);
 		} 
 		if (evt.target === discussed) {
-			DebounceActivDiscussedFilters(evt);
+			debounceActivDiscussedFilters(evt);
 		}
 	});
 
-	var DebounceActivPopularFilters = debounce(activPopularFilters);
-	var DebounceActivRandomFilters = debounce(activRandomFilters);
-	var DebounceActivDiscussedFilters = debounce(activDiscussedFilters);
+	var debounceActivPopularFilters = debounce(activPopularFilters);
+	var debounceActivRandomFilters = debounce(activRandomFilters);
+	var debounceActivDiscussedFilters = debounce(activDiscussedFilters);
 
 	function debounce (cb) {
 		var lastTimeout = null;

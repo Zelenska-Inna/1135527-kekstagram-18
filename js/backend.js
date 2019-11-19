@@ -3,13 +3,7 @@
 window.backend = (function () {
 	var XHR_SUCCESS_STATUS = 200;
 
-	function load(url, onSuccess, onError) {
-		
-		var xhr = new XMLHttpRequest();
-		xhr.responseType = 'json';
-
-		xhr.open('GET', url);
-
+	function showResultDownload(xhr, onSuccess, onError) {
 		xhr.addEventListener('load', function () {
 			if (xhr.status === XHR_SUCCESS_STATUS) {
 				onSuccess(xhr.response);
@@ -17,6 +11,15 @@ window.backend = (function () {
 				onError('Статус ответа ' + xhr.status + xhr.statusText);
 			}
 		});
+	}
+
+	function load(url, onSuccess, onError) {
+		
+		var xhr = new XMLHttpRequest();
+		xhr.responseType = 'json';
+		xhr.open('GET', url);
+
+		showResultDownload( xhr, onSuccess, onError);
 		xhr.send();
 	}
 
@@ -26,15 +29,10 @@ window.backend = (function () {
 
 		xhr.open('POST', url);
 
-		xhr.addEventListener('load', function () {
-			if (xhr.status === XHR_SUCCESS_STATUS) {
-				onSuccess(xhr.response);
-			} else {
-				onError('Статус ответа ' + xhr.status + xhr.statusText);
-			}
-		});
+		showResultDownload(xhr, onSuccess, onError);
 		xhr.send(data);
 	}
+
 
 	return {
 		load: load,

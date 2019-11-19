@@ -2,7 +2,7 @@
 
 (function () {
 	var NUMBER_DIFFERENCE = 2;
-	var elementRender = document.querySelector('.pictures');
+	var containerForRenderPhoto = document.querySelector('.pictures');
 
 	//при клике открытие фото 
 	function renderPreview(elem) {
@@ -19,8 +19,10 @@
 			evt.preventDefault();
 			renderPreview(parent);
 		}
+		document.addEventListener('keydown', window.preview.bigPictureEscPressHandler);
+
 	}
-	elementRender.addEventListener('click', pictureClickHandler);
+	containerForRenderPhoto.addEventListener('click', pictureClickHandler);
 
 	function load(data) {
 		window.xhrPhotos = data;
