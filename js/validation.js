@@ -4,8 +4,8 @@ window.validation = (function () {
 	var COUNT_WORDS = 5;
 	var LENGTH_WORD = 20;
 	var LENGTH_TEXT = 140;
-	var inputTags = document.querySelector('.text__hashtags');//поле хештегов 
-	var textarea = document.querySelector('.text__description');//поле коментариев
+	var inputTags = document.querySelector('.text__hashtags');
+	var textarea = document.querySelector('.text__description');
 
 	function changeBorder(element) {
 		element.style.borderColor = 'red';
@@ -43,17 +43,15 @@ window.validation = (function () {
 	}
 
 	function checkForDuplicateHashTags(list) {
-		
-		for(var i = 0; i < list.length; i++){
-			for(var k = 0; k < list.length; k++){
-				if(list[i] === list[k] && i !== k){
-					return 'одинаковые хештеги не допускаются';
-				}
+		for (var i = 0; i < list.length; i++) {
+			var inkr = i + 1;
+			if (list.indexOf(list[i], inkr) !== -1) {
+				return 'одинаковые хештеги не допускаются';
 			}
-		}
+		}	
 	}
 
-	function onInputListener (evt) {
+	function checkOutTagsHandler (evt) {
 		var target = evt.target;
 		var tagArray = target.value.split(' ');
 		var allHashLength = 0;
@@ -118,10 +116,10 @@ window.validation = (function () {
 		returnBorder(inputTags);
 	}
 
-	inputTags.addEventListener('input', onInputListener);
+	inputTags.addEventListener('input', checkOutTagsHandler);
 
 	// коментарии
-	function onInputTextListener(evt) {
+	function checkOutTextsHandler(evt) {
 		var target = evt.target;
 		var text = target.value;
 
@@ -133,7 +131,7 @@ window.validation = (function () {
 		returnBorder(textarea);
 		target.setCustomValidity('');
 	}
-	textarea.addEventListener('input', onInputTextListener);
+	textarea.addEventListener('input', checkOutTextsHandler);
 	return {
 		inputTags: inputTags,
 		textarea: textarea,

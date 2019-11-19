@@ -24,7 +24,7 @@
 	var slider = document.querySelector('.img-upload__effect-level');
 	var pin = slider.querySelector('.effect-level__pin');
 	var changeLine = document.querySelector('.effect-level__line');
-	var сolorSlider = document.querySelector('.effect-level__depth');
+	var colorSlider = document.querySelector('.effect-level__depth');
 	var setupOpen = document.querySelector('.img-upload__label');
 	var setupClose = document.querySelector('#upload-cancel');
 	var form = document.querySelector('.img-upload__form');
@@ -68,7 +68,7 @@
 
 	}
 	// по умолчанию картинка в полном размере
-	function  defaultSizeImg() {
+	function  setDefaultSizePicture() { 
 		changePercent.setAttribute('value', MAX_RATE + '%');
 	}
 
@@ -90,7 +90,7 @@
 		previewImg.classList.add(evt);
 		// по умолчанию
 		pin.style.left = MAX_RATE + '%';//по умолчанию максимальное значение
-		сolorSlider.style.width = pin.style.left; //по умолчанию цвет линии
+		colorSlider.style.width = pin.style.left; //по умолчанию цвет линии
 	}
 	//слушает все фыльтры
 	function changeFilterHandler(evt) {
@@ -118,18 +118,21 @@
 
 	//при нажатие на кнопку открывается окно загрузки фото
 	setupOpen.addEventListener('click', function() {
+		previewImg.src = 'img/upload-default-image.jpg';
 		removeText();
 		removeFilter();
 		window.util.closePopup(slider);
 		window.util.openPopup(window.util.setup);
-		defaultSizeImg();
+		setDefaultSizePicture();
+		document.addEventListener('keydown', window.util.pressEscSetupHandler);
 	});
 
 	//при нажатие на кнопку-хрестик закрыватся окно
 	setupClose.addEventListener('click', function() {
 		window.util.closePopup(window.util.setup);		
 	});
-	
+
+
 	// Ползунок
 	pin.addEventListener('mousedown', function(evt) {
 		var startCoords = evt.clientX;//точка нажатия 
@@ -146,7 +149,7 @@
 			}
 			pin.style.left = newLeft + 'px';
 			var point = Math.floor(newLeft * MAX_RATE / changeLine.offsetWidth);
-			сolorSlider.style.width = point + '%';
+			colorSlider.style.width = point + '%';
 				
 			сhangeDepthFilter(point);
 		}
@@ -168,17 +171,17 @@
 		var main = document.querySelector('main');
 		var button = node.querySelector(style + '__button');
 
-		function messageEscPressHandler(evt) {
+		function pressEscMessageHandler(evt) {
 			window.util.pressEsc(evt, removeMessageHandler);
 		}
 
 		function removeMessageHandler() {
 			main.removeChild(node);
-			document.removeEventListener('keydown', messageEscPressHandler);
+			document.removeEventListener('keydown', pressEscMessageHandler);
 		}
 
 		button.addEventListener('click', removeMessageHandler);
-		document.addEventListener('keydown', messageEscPressHandler);
+		document.addEventListener('keydown', pressEscMessageHandler);
 
 		node.addEventListener('click', function (evt) {
 			if (evt.target === node) {
@@ -195,14 +198,14 @@
 		main.appendChild(node);
 	}
 
-	function onSuccess() {
+	function setSuccessfulResult() { 
 		removeText();
 		removeFilter();
 		window.util.closePopup(window.util.setup);
 		renderMessage('#success');
 	}
 
-	function onError(message) {
+	function setFalseResult(message) {
 		removeText();
 		removeFilter();
 		window.util.closePopup(window.util.setup);
@@ -212,6 +215,6 @@
 	form.addEventListener('submit', function (evt) {
 		evt.preventDefault();
 
-		window.backend.upload('https://js.dump.academy/kekstagram', new FormData(form), onSuccess, onError);
+		window.backend.upload('https://js.dump.academy/kekstagram', new FormData(form), setSuccessfulResult, setFalseResult);
 	});
 })();
