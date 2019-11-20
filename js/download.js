@@ -5,21 +5,21 @@
 	var сhooserImg = document.querySelector('.img-upload__input');
 
 	function uploadNewPictureHandler() {
-		var file = сhooserImg.files[0];
-		var fileName = file.name.toLowerCase();
+		var сhooserfile = сhooserImg.files[0];
+		var fileName = сhooserfile.name.toLowerCase();
 
-		var matches = FILE_FORMATS.some(function (format) {
+		var matchesFile = FILE_FORMATS.some(function (format) {
 			return fileName.endsWith(format);
 		});
 
-		if (matches) {
-			var reader = new FileReader();
+		if (matchesFile) {
+			var readerFile = new FileReader();
 
-			reader.addEventListener('load', function () {
-				previewImg.src = reader.result;
+			readerFile.addEventListener('load', function () {
+				previewImg.src = readerFile.result;
 			});
 
-			reader.readAsDataURL(file);
+			readerFile.readAsDataURL(сhooserfile);
 		}
 	}
 

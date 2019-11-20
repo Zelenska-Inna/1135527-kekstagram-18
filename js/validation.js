@@ -23,7 +23,6 @@ window.validation = (function () {
 
 	function checkForDuplicateHash(tag) {
 		var hashCount = 1;
-
 		for (var i = 1; i < tag.length; i++) {
 			var tagSymbol = tag[i];
 			if (tagSymbol === '#') {
@@ -43,12 +42,19 @@ window.validation = (function () {
 	}
 
 	function checkForDuplicateHashTags(list) {
-		for (var i = 0; i < list.length; i++) {
-			var inkr = i + 1;
-			if (list.indexOf(list[i], inkr) !== -1) {
-				return 'одинаковые хештеги не допускаются';
+		var availabilityOfMatches;
+
+		list.forEach(function(item, index, arr) {
+			var inkr = index + 1;
+
+			if (arr.indexOf(arr[index], inkr) !== -1) {
+				availabilityOfMatches = 1;
 			}
-		}	
+		});
+
+		if (availabilityOfMatches == 1 ) {
+			return 'одинаковые хештеги не допускаются';
+		}
 	}
 
 	function checkOutTagsHandler (evt) {
@@ -59,6 +65,7 @@ window.validation = (function () {
 		
 		for(var i = 0; i < tagArray.length; i++) {
 			var oneTag = tagArray[i];
+
 			//количество тегов до 5
 			if (oneTag === '') {
 				target.setCustomValidity('');

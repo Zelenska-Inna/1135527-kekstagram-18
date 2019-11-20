@@ -37,23 +37,21 @@ window.preview = (function () {
 		var wrapper = document.createDocumentFragment();
 		var commentsCountRendered = document.querySelector('.comments__count-start');
 
-		for (var i = startCount; i < endCount && data.comments.length; i++) {
-			if (i <= data.comments.length - 1) {
+		for (var i = startCount; i < endCount && i < data.comments.length; i++) {
 				var comment = data.comments[i];
-				var element = wrapperCommentTemplate.cloneNode(true);
-				var commentImg = element.querySelector('img');
+				var placeForCloning = wrapperCommentTemplate.cloneNode(true); 
+				var commentImg = placeForCloning.querySelector('img');
 				commentImg.src = comment.avatar;
 				commentImg.alt = comment.name; 
-				element.querySelector('.social__text').textContent = comment.message;
-				wrapper.appendChild(element);// добавляет клонированый li  и детей в ОП 
+				placeForCloning.querySelector('.social__text').textContent = comment.message;
+				wrapper.appendChild(placeForCloning);// добавляет клонированый li  и детей в ОП 
 				
 				commentsCountRendered.textContent = i + 1;
 				commentsCount += 1;
 			
-				if (i >= data.comments.length - 1) {
+				if (i >= data.comments.length-1 ) {
 					showMoreCommentsButton.classList.add('visually-hidden');
 				}
-			}
 		}
 		containerForRenderComment.appendChild(wrapper);
 	}
@@ -65,20 +63,20 @@ window.preview = (function () {
 
 	function renderPhotos(data) {
 		window.newArrPhoto = data;
-		var wrapper = document.createDocumentFragment();//прячет оболочку знач не контейнер а оболочка
+		var wrapper = document.createDocumentFragment();
 
 		for (var i = 0; i < data.length; i++) {
 			var actualPhoto = data[i];
-			var element = wrapperPhotoTemplate.cloneNode(true); 
-			var img = element.querySelector('img');
-			img.setAttribute('tabindex', 0);
-			element.href = actualPhoto.url; 
-			img.src = actualPhoto.url;
-			img.alt = actualPhoto.description; 
+			var placeForCloning = wrapperPhotoTemplate.cloneNode(true); 
+			var dataOfImg = placeForCloning.querySelector('img');
+			dataOfImg.setAttribute('tabindex', 0);
+			placeForCloning.href = actualPhoto.url; 
+			dataOfImg.src = actualPhoto.url;
+			dataOfImg.alt = actualPhoto.description; 
 
-			element.querySelector('.picture__comments').textContent = actualPhoto.comments.length;
-			element.querySelector('.picture__likes').textContent = actualPhoto.likes;
-			wrapper.appendChild(element);//добавляет клонированый а и детей в ОП 
+			placeForCloning.querySelector('.picture__comments').textContent = actualPhoto.comments.length;
+			placeForCloning.querySelector('.picture__likes').textContent = actualPhoto.likes;
+			wrapper.appendChild(placeForCloning);//добавляет клонированый а и детей в ОП 
 
 		}
 
@@ -100,10 +98,10 @@ window.preview = (function () {
 
 	function renderError(message) {
 		var errorTemplate = document.querySelector('#error').content.querySelector('.error');
-		var main = document.querySelector('main');
+		var mainPart = document.querySelector('main');
 		var errorNode = errorTemplate.cloneNode(true);
-		errorNode.querySelector('.error__title').innerHTML = 'Ошибка соединения с сервером <br>' + message;
-		main.appendChild(errorNode);
+		errorNode.querySelector('.error__title').textContent = 'Ошибка соединения с сервером <br>' + message;
+		mainPart.appendChild(errorNode);
 	}
 
 	return {

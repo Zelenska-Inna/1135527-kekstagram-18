@@ -4,9 +4,9 @@ window.filters = (function () {
 	var DEBOUNCE_INTERVAL = 500;
 	var MAX_LENGTH = 10;
 	var imgFilters = document.querySelector('.img-filters');
-	var popular = imgFilters.querySelector('#filter-popular');
-	var random = imgFilters.querySelector('#filter-random');
-	var discussed = imgFilters.querySelector('#filter-discussed');
+	var filterPopular = imgFilters.querySelector('#filter-popular'); 
+	var filterRandom = imgFilters.querySelector('#filter-random');
+	var filterDiscussed = imgFilters.querySelector('#filter-discussed');
 	//показывает кнопки фильтров
 	function showFilters() {
 		imgFilters.classList.remove('img-filters--inactive');
@@ -52,21 +52,21 @@ window.filters = (function () {
 	}
 
 	function activDiscussedFilters(evt) {
-		var grade = window.xhrPhotos.slice().sort(function (a, b) {
+		var photosGrade = window.xhrPhotos.slice().sort(function (a, b) {
 			return b.comments.length - a.comments.length;
 		});
 
-		changeFilter(evt, grade);
+		changeFilter(evt, photosGrade);
 	}
 
 	imgFilters.addEventListener('click', function(evt) {
-		if ( evt.target === popular) {
+		if ( evt.target === filterPopular) {
 			debounceActivPopularFilters(evt);
 		}
-		if (evt.target === random) {
+		if (evt.target === filterRandom) {
 			debounceActivRandomFilters(evt);
 		} 
-		if (evt.target === discussed) {
+		if (evt.target === filterDiscussed) {
 			debounceActivDiscussedFilters(evt);
 		}
 	});

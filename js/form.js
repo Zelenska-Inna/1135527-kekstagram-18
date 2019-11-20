@@ -22,28 +22,28 @@
 	var allFilters = document.querySelectorAll('.effects__preview');
 	var previewImg = document.querySelector('.img-upload__preview').querySelector('img');
 	var slider = document.querySelector('.img-upload__effect-level');
-	var pin = slider.querySelector('.effect-level__pin');
+	var pinOfSlider = slider.querySelector('.effect-level__pin');
 	var changeLine = document.querySelector('.effect-level__line');
 	var colorSlider = document.querySelector('.effect-level__depth');
 	var setupOpen = document.querySelector('.img-upload__label');
 	var setupClose = document.querySelector('#upload-cancel');
-	var form = document.querySelector('.img-upload__form');
+	var formForImg = document.querySelector('.img-upload__form');
 
 	// Масштаб
 	function scalingFotoHandler(evt) {
 		var target = evt.target.className.split('--');
 		var splitUp = changePercent.getAttribute('value').split('%');
 		var number = Number(splitUp[0]);
-		var change;
+		var changeOfSize;
 
 		if (number > VARIABLE && target[1] === 'smaller') {
-			change = number - VARIABLE;
-			previewImg.style.transform = 'scale(' + change / MAX_RATE + ')';
-			changePercent.setAttribute('value',change + '%');
+			changeOfSize = number - VARIABLE;
+			previewImg.style.transform = 'scale(' + changeOfSize / MAX_RATE + ')';
+			changePercent.setAttribute('value',changeOfSize + '%');
 		} else if (number <= MAX_POINT && target[1] === 'bigger') {
-			change = number + VARIABLE;
-			previewImg.style.transform = 'scale(' + change / MAX_RATE + ')';
-			changePercent.setAttribute('value', change + '%');//изменение самого класа
+			changeOfSize = number + VARIABLE;
+			previewImg.style.transform = 'scale(' + changeOfSize / MAX_RATE + ')';
+			changePercent.setAttribute('value', changeOfSize + '%');//изменение самого класа
 			return;
 		}
 	}
@@ -89,8 +89,8 @@
 		previewImg.style.filter = '';
 		previewImg.classList.add(evt);
 		// по умолчанию
-		pin.style.left = MAX_RATE + '%';//по умолчанию максимальное значение
-		colorSlider.style.width = pin.style.left; //по умолчанию цвет линии
+		pinOfSlider.style.left = MAX_RATE + '%';//по умолчанию максимальное значение
+		colorSlider.style.width = pinOfSlider.style.left; //по умолчанию цвет линии
 	}
 	//слушает все фыльтры
 	function changeFilterHandler(evt) {
@@ -134,53 +134,53 @@
 
 
 	// Ползунок
-	pin.addEventListener('mousedown', function(evt) {
+	pinOfSlider.addEventListener('mousedown', function(evt) {
 		var startCoords = evt.clientX;//точка нажатия 
 
-		function onMouseMove(moveEvt) {
+		function moveMouseHandler(moveEvt) {
 			var shift = startCoords - moveEvt.clientX;//точка клика - то на сколько елементов подвинули
 			startCoords = moveEvt.clientX;//новая точка координат 
-			var newLeft = pin.offsetLeft - shift;
+			var newLeft = pinOfSlider.offsetLeft - shift;
 
 			if (newLeft < 0) {
 				newLeft = changeLine.offsetLeft + 'px';
 			} else if (newLeft > changeLine.getBoundingClientRect().width) {
 				newLeft = changeLine.getBoundingClientRect().width + 'px';
 			}
-			pin.style.left = newLeft + 'px';
+			pinOfSlider.style.left = newLeft + 'px';
 			var point = Math.floor(newLeft * MAX_RATE / changeLine.offsetWidth);
 			colorSlider.style.width = point + '%';
 				
 			сhangeDepthFilter(point);
 		}
 
-		function onMouseUp(upEvt) {
+		function upMouseHandler(upEvt) {
 			upEvt.preventDefault();
-			document.removeEventListener('mousemove', onMouseMove);
-			document.removeEventListener('mouseup', onMouseUp);
+			document.removeEventListener('mousemove', moveMouseHandler);
+			document.removeEventListener('mouseup', upMouseHandler);
 		}
-		document.addEventListener('mousemove', onMouseMove);
-		document.addEventListener('mouseup', onMouseUp);
+		document.addEventListener('mousemove', moveMouseHandler);
+		document.addEventListener('mouseup', upMouseHandler);
 	});
 
 	//СООБЩЕНИЕ
 	function renderMessage(id, message) {
-		var style = id.replace('#', '.');
-		var template = document.querySelector(id).content.querySelector(style);
+		var styleShift = id.replace('#', '.');
+		var template = document.querySelector(id).content.querySelector(styleShift);
 		var node = template.cloneNode(true);
-		var main = document.querySelector('main');
-		var button = node.querySelector(style + '__button');
+		var mainPart  = document.querySelector('main');
+		var closeMessageButton= node.querySelector(styleShift + '__button');
 
 		function pressEscMessageHandler(evt) {
 			window.util.pressEsc(evt, removeMessageHandler);
 		}
 
 		function removeMessageHandler() {
-			main.removeChild(node);
+			mainPart.removeChild(node);
 			document.removeEventListener('keydown', pressEscMessageHandler);
 		}
 
-		button.addEventListener('click', removeMessageHandler);
+		closeMessageButton.addEventListener('click', removeMessageHandler);
 		document.addEventListener('keydown', pressEscMessageHandler);
 
 		node.addEventListener('click', function (evt) {
@@ -190,12 +190,12 @@
 		});
 
 		if (message) {
-			var nodeInner = node.querySelector(style + '__inner');
-			var p = document.createElement('p');
-			p.textContent = message;
-			nodeInner.appendChild(p);
+			var nodeInner = node.querySelector(styleShift + '__inner');
+			var paragraph = document.createElement('p');
+			paragraph.textContent = message;
+			nodeInner.appendChild(paragraph);
 		}
-		main.appendChild(node);
+		mainPart.appendChild(node);
 	}
 
 	function setSuccessfulResult() { 
@@ -212,9 +212,9 @@
 		renderMessage('#error', message);
 	}
 
-	form.addEventListener('submit', function (evt) {
+	formForImg.addEventListener('submit', function (evt) {
 		evt.preventDefault();
 
-		window.backend.upload('https://js.dump.academy/kekstagram', new FormData(form), setSuccessfulResult, setFalseResult);
+		window.backend.upload('https://js.dump.academy/kekstagram', new FormData(formForImg), setSuccessfulResult, setFalseResult);
 	});
 })();
