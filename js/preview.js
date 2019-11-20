@@ -38,20 +38,20 @@ window.preview = (function () {
 		var commentsCountRendered = document.querySelector('.comments__count-start');
 
 		for (var i = startCount; i < endCount && i < data.comments.length; i++) {
-				var comment = data.comments[i];
-				var placeForCloning = wrapperCommentTemplate.cloneNode(true); 
-				var commentImg = placeForCloning.querySelector('img');
-				commentImg.src = comment.avatar;
-				commentImg.alt = comment.name; 
-				placeForCloning.querySelector('.social__text').textContent = comment.message;
-				wrapper.appendChild(placeForCloning);// добавляет клонированый li  и детей в ОП 
+			var comment = data.comments[i];
+			var placeForCloning = wrapperCommentTemplate.cloneNode(true); 
+			var commentImg = placeForCloning.querySelector('img');
+			commentImg.src = comment.avatar;
+			commentImg.alt = comment.name; 
+			placeForCloning.querySelector('.social__text').textContent = comment.message;
+			wrapper.appendChild(placeForCloning);// добавляет клонированый li  и детей в ОП 
 				
-				commentsCountRendered.textContent = i + 1;
-				commentsCount += 1;
+			commentsCountRendered.textContent = i + 1;
+			commentsCount += 1;
 			
-				if (i >= data.comments.length-1 ) {
-					showMoreCommentsButton.classList.add('visually-hidden');
-				}
+			if (i >= data.comments.length-1 ) {
+				showMoreCommentsButton.classList.add('visually-hidden');
+			}
 		}
 		containerForRenderComment.appendChild(wrapper);
 	}
