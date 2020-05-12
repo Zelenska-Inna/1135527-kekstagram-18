@@ -30,6 +30,6 @@
 		window.filters.showFilters();
 	}
 
-	window.backend.load('https://js.dump.academy/kekstagram/data', load, window.preview.renderError);
+	window.backend.load('https://javascript.pages.academy/kekstagram/data', load, window.preview.renderError);
 
 })();
